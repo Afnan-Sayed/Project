@@ -19,9 +19,7 @@ namespace ERP_API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(); // or AddOpenApi() depending on .NET version
 
-            // ====================================================
-            // 👇 THE MAGIC CHAINING (Dependecy Injection)
-            // ====================================================
+           
             builder.Services
                 .AddDataAccessServices(builder.Configuration) // Wires up UnitOfWork
                 .AddApplicationServices();                    // Wires up ProductService

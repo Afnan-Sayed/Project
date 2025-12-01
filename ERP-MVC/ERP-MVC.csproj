@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Inventory\" />
-    <Folder Include="Models\ViewModels\Inventory\" />
-    <Folder Include="Services\Inventory\" />
-    <Folder Include="Views\Inventory\" />
+    <Folder Include="Controllers\Inventory\Package\" />
+    <Folder Include="Models\ViewModels\Inventory\Packages\" />
+    <Folder Include="Models\ViewModels\Inventory\Product\" />
+    <Folder Include="Views\Inventory\Package\" />
   </ItemGroup>
 
 </Project>
