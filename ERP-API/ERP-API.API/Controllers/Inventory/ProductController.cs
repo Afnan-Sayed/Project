@@ -1,9 +1,10 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.Inventory.Product;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.DTOs.Inventory.Product;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ERP_API.Application.Interfaces.Inventory;
 
-namespace ERP_API.Controllers
+namespace ERP_API.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -11,56 +12,42 @@ namespace ERP_API.Controllers
     {
         private readonly IProductService _productService;
 
-        // Constructor Injection
         public ProductsController(IProductService productService)
         {
             _productService = productService;
         }
 
-        // POST: api/Products
         [HttpPost]
-        public IActionResult Create(ProductInsertDto productDto)
+        public async Task<IActionResult> Create(ProductInsertDto productDto)
         {
-            // Note: Because we use [ApiController], we don't need to write:
-            // if (!ModelState.IsValid) return BadRequest();
-            // The controller does it automatically based on the [Required] tags in your DTO.
-
-            var createdProduct = _productService.AddProduct(productDto);
-
-            // Returns status 200 OK with the full product object (including the new ID)
+            var createdProduct = await _productService.AddProductAsync(productDto);
             return Ok(createdProduct);
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_productService.GetAllProducts());
+            return Ok(await _productService.GetAllProductsAsync());
         }
 
-
-        // POST: api/Products/{id}/Variations
-        // Example: Add "Cheese Flavor" to Product ID 1
         [HttpPost("{productId}/Variations")]
-        public IActionResult AddVariation(int productId, VariationInsertDto dto)
+        public async Task<IActionResult> AddVariation(int productId, VariationInsertDto dto)
         {
-            var result = _productService.AddVariation(productId, dto);
+            var result = await _productService.AddVariationAsync(productId, dto);
             return Ok(result);
         }
 
-        // POST: api/Products/Variations/{id}/Packages
-        // Example: Add "Carton" option to Variation ID 5
         [HttpPost("Variations/{variationId}/Packages")]
-        public IActionResult AddPackage(int variationId, PackageLinkInsertDto dto)
+        public async Task<IActionResult> AddPackage(int variationId, PackageLinkInsertDto dto)
         {
-            var result = _productService.AddPackage(variationId, dto);
+            var result = await _productService.AddPackageAsync(variationId, dto);
             return Ok(result);
         }
 
-        // GET: api/Products/5
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var product = _productService.GetProductById(id);
+            var product = await _productService.GetProductByIdAsync(id);
 
             if (product == null)
             {

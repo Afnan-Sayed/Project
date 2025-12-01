@@ -1,6 +1,6 @@
 [
   {
-    "ContainingType": "ERP_API.Controllers.InventoryAdjustmentController",
+    "ContainingType": "ERP_API.API.Controllers.InventoryAdjustmentController",
     "Method": "CreateAdjustment",
     "RelativePath": "api/InventoryAdjustment/Adjustments",
     "HttpMethod": "POST",
@@ -9,14 +9,14 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ERP_Application.DTOs.InventoryAdjustment.CreateAdjustmentDto",
+        "Type": "ERP_API.Application.DTOs.InventoryAdjustment.CreateAdjustmentDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.InventoryAdjustmentController",
+    "ContainingType": "ERP_API.API.Controllers.InventoryAdjustmentController",
     "Method": "GetAdjustmentLogs",
     "RelativePath": "api/InventoryAdjustment/Adjustments",
     "HttpMethod": "GET",
@@ -26,7 +26,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "G3_API.API.Controllers.PackageTypesController",
+    "ContainingType": "ERP_API.API.Controllers.PackageTypesController",
     "Method": "GetAll",
     "RelativePath": "api/PackageTypes",
     "HttpMethod": "GET",
@@ -36,7 +36,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "G3_API.API.Controllers.PackageTypesController",
+    "ContainingType": "ERP_API.API.Controllers.PackageTypesController",
     "Method": "Create",
     "RelativePath": "api/PackageTypes",
     "HttpMethod": "POST",
@@ -45,14 +45,14 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ERP_Application.DTOs.Inventory.Packages.PackageTypeInsertDto",
+        "Type": "ERP_API.Application.DTOs.Inventory.Packages.PackageTypeInsertDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "G3_API.API.Controllers.PackageTypesController",
+    "ContainingType": "ERP_API.API.Controllers.PackageTypesController",
     "Method": "GetPackageDetails",
     "RelativePath": "api/PackageTypes/{id}/Products",
     "HttpMethod": "GET",
@@ -68,7 +68,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.ProductsController",
+    "ContainingType": "ERP_API.API.Controllers.ProductsController",
     "Method": "Create",
     "RelativePath": "api/Products",
     "HttpMethod": "POST",
@@ -77,14 +77,14 @@
     "Parameters": [
       {
         "Name": "productDto",
-        "Type": "ERP_Application.DTOs.Inventory.Product.ProductInsertDto",
+        "Type": "ERP_API.Application.DTOs.Inventory.Product.ProductInsertDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.ProductsController",
+    "ContainingType": "ERP_API.API.Controllers.ProductsController",
     "Method": "GetAll",
     "RelativePath": "api/Products",
     "HttpMethod": "GET",
@@ -94,7 +94,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.ProductsController",
+    "ContainingType": "ERP_API.API.Controllers.ProductsController",
     "Method": "GetById",
     "RelativePath": "api/Products/{id}",
     "HttpMethod": "GET",
@@ -110,7 +110,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.ProductsController",
+    "ContainingType": "ERP_API.API.Controllers.ProductsController",
     "Method": "AddVariation",
     "RelativePath": "api/Products/{productId}/Variations",
     "HttpMethod": "POST",
@@ -124,14 +124,14 @@
       },
       {
         "Name": "dto",
-        "Type": "ERP_Application.DTOs.Inventory.Product.VariationInsertDto",
+        "Type": "ERP_API.Application.DTOs.Inventory.Product.VariationInsertDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.ProductsController",
+    "ContainingType": "ERP_API.API.Controllers.ProductsController",
     "Method": "AddPackage",
     "RelativePath": "api/Products/Variations/{variationId}/Packages",
     "HttpMethod": "POST",
@@ -145,14 +145,14 @@
       },
       {
         "Name": "dto",
-        "Type": "ERP_Application.DTOs.Inventory.Product.PackageLinkInsertDto",
+        "Type": "ERP_API.Application.DTOs.Inventory.Product.PackageLinkInsertDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.WarehousesController",
+    "ContainingType": "ERP_API.API.Controllers.WarehousesController",
     "Method": "GetAll",
     "RelativePath": "api/Warehouses",
     "HttpMethod": "GET",
@@ -162,7 +162,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.WarehousesController",
+    "ContainingType": "ERP_API.API.Controllers.WarehousesController",
     "Method": "Create",
     "RelativePath": "api/Warehouses",
     "HttpMethod": "POST",
@@ -171,14 +171,14 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ERP_Application.DTOs.Warehouse.WarehouseInsertDto",
+        "Type": "ERP_API.Application.DTOs.Warehouse.WarehouseInsertDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.WarehousesController",
+    "ContainingType": "ERP_API.API.Controllers.WarehousesController",
     "Method": "GetStock",
     "RelativePath": "api/Warehouses/{id}/Stock",
     "HttpMethod": "GET",
@@ -194,7 +194,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.WarehousesController",
+    "ContainingType": "ERP_API.API.Controllers.WarehousesController",
     "Method": "GetLogs",
     "RelativePath": "api/Warehouses/Logs",
     "HttpMethod": "GET",
@@ -204,7 +204,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "ERP_API.Controllers.WarehousesController",
+    "ContainingType": "ERP_API.API.Controllers.WarehousesController",
     "Method": "TransferStock",
     "RelativePath": "api/Warehouses/Transfer",
     "HttpMethod": "POST",
@@ -213,7 +213,7 @@
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "ERP_Application.DTOs.Warehouse.StockTransferDto",
+        "Type": "ERP_API.Application.DTOs.Warehouse.StockTransferDto",
         "IsRequired": true
       }
     ],

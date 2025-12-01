@@ -1,16 +1,16 @@
-﻿using ERP_Application.DTOs.InventoryAdjustment;
-using ERP_DataLayer.Entities.InventoryAdjustment;
+﻿using ERP_API.Application.DTOs.InventoryAdjustment;
+using ERP_API.DataAccess.Entities.InventoryAdjustment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.Contracts
+namespace ERP_API.Application.Interfaces
 {
     public interface IInventoryAdjustmentService
     {
-        InventoryAdjustment CreateAdjustment(CreateAdjustmentDto dto);
-        IEnumerable<AdjustmentLogDto> GetAdjustmentLogs();
+        Task<InventoryAdjustment> CreateAdjustmentAsync(CreateAdjustmentDto dto);
+        Task<IEnumerable<AdjustmentLogDto>> GetAdjustmentLogsAsync();
     }
 }

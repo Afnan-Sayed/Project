@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.DTOs.Warehouse
+namespace ERP_MVC.Models.DTOs.Warehouse
 {
     public class WarehouseStockDto
     {

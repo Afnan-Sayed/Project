@@ -1,19 +1,19 @@
-﻿using ERP_DataLayer.Contracts;
-using ERP_DataLayer.Entities.Inventory;
-using ERP_DataLayer.Entities.InventoryAdjustment;
-using ERP_DataLayer.Entities.Warehouse;
-using ERP_DataLayer.Repositories;
+﻿using ERP_API.DataAccess.Interfaces;
+using ERP_API.DataAccess.Entities.Inventory;
+using ERP_API.DataAccess.Entities.InventoryAdjustment;
+using ERP_API.DataAccess.Entities.Warehouse;
+using ERP_API.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_DataLayer.DataContext
+namespace ERP_API.DataAccess.DataContext
 {
   
 
-    namespace ERP_DataLayer.DataContext
+    namespace ERP_API.DataAccess.DataContext
     {
         internal class ErpUnitOfWork : IErpUnitOfWork
         {
@@ -72,9 +72,11 @@ namespace ERP_DataLayer.DataContext
             public IBaseRepository<StockTransferLog, int> StockTransferLogs => _stockTransferLogs.Value;
             public IBaseRepository<InventoryAdjustment, int> InventoryAdjustments => _inventoryAdjustments.Value;
 
-            public void SaveChanges()
+
+
+            public async Task SaveChangesAsync()
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

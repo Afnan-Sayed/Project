@@ -1,9 +1,9 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.Warehouse;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.DTOs.Warehouse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ERP_API.Controllers
+namespace ERP_API.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,36 +16,29 @@ namespace ERP_API.Controllers
             _warehouseService = warehouseService;
         }
 
-        // GET: api/Warehouses
-        // This will list all warehouses (including the Main Virtual one)
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var warehouses = _warehouseService.GetAllWarehouses();
+            var warehouses = await _warehouseService.GetAllWarehousesAsync();
             return Ok(warehouses);
         }
 
-        // POST: api/Warehouses
-        // Create a new physical location (e.g. "Alex Branch")
         [HttpPost]
-        public IActionResult Create(WarehouseInsertDto dto)
+        public async Task<IActionResult> Create(WarehouseInsertDto dto)
         {
-            var createdWarehouse = _warehouseService.AddWarehouse(dto);
+            var createdWarehouse = await _warehouseService.AddWarehouseAsync(dto);
             return Ok(createdWarehouse);
         }
 
-        // POST: api/Warehouses/Transfer
         [HttpPost("Transfer")]
-        public IActionResult TransferStock(StockTransferDto dto)
+        public async Task<IActionResult> TransferStock(StockTransferDto dto)
         {
-            // 1. Validate inputs (Warehouses shouldn't be the same)
             if (dto.FromWarehouseId == dto.ToWarehouseId)
             {
                 return BadRequest("Source and Destination warehouses cannot be the same.");
             }
 
-            // 2. Call Service
-            bool success = _warehouseService.TransferStock(dto);
+            bool success = await _warehouseService.TransferStockAsync(dto);
 
             if (!success)
             {
@@ -55,26 +48,20 @@ namespace ERP_API.Controllers
             return Ok("Transfer Successful");
         }
 
-
-        
-
-        // GET: api/Warehouses/1/Stock
         [HttpGet("{id}/Stock")]
-        public IActionResult GetStock(int id)
+        public async Task<IActionResult> GetStock(int id)
         {
-            var result = _warehouseService.GetWarehouseStock(id);
-            // We return Ok even if empty list (it just means empty warehouse)
+            var result = await _warehouseService.GetWarehouseStockAsync(id);
             return Ok(result);
         }
 
-
-        // GET: api/Warehouses/Logs
         [HttpGet("Logs")]
-        public IActionResult GetLogs()
+        public async Task<IActionResult> GetLogs()
         {
-            var logs = _warehouseService.GetTransferLogs();
+            var logs = await _warehouseService.GetTransferLogsAsync();
             return Ok(logs);
         }
+
 
     }
 }

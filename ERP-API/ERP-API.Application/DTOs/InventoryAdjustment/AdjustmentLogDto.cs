@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.DTOs.InventoryAdjustment
+namespace ERP_API.Application.DTOs.InventoryAdjustment
 {
     public class AdjustmentLogDto
     {

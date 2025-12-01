@@ -1,16 +1,17 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.Inventory.Product;
-using ERP_Application.DTOs.Inventory.Product.Responses;
-using ERP_DataLayer.Contracts;
-using ERP_DataLayer.Entities.Inventory;
-using ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.DTOs.Inventory.Product;
+using ERP_API.Application.DTOs.Inventory.Product.Responses;
+using ERP_API.DataAccess.Interfaces;
+using ERP_API.DataAccess.Entities.Inventory;
+using ERP_API.DataAccess.Entities.Warehouse;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ERP_Application.Services
+namespace ERP_API.Application.Services
 {
-    internal class ProductService : IProductService
+    public class ProductService : IProductService
     {
         private readonly IErpUnitOfWork _unitOfWork;
 
@@ -20,9 +21,9 @@ namespace ERP_Application.Services
         }
 
         // ==========================================================
-        // 1. ADD PRODUCT (Returns DTO)
+        // 1. ADD PRODUCT (Async)
         // ==========================================================
-        public ProductResponseDto AddProduct(ProductInsertDto dto)
+        public async Task<ProductResponseDto> AddProductAsync(ProductInsertDto dto)
         {
             // 1. Create Product Entity
             var product = new Product
@@ -32,11 +33,11 @@ namespace ERP_Application.Services
                 CategoryId = dto.CategoryId
             };
 
-            productRepo.Create(product);
-            _unitOfWork.SaveChanges();
+            await productRepo.CreateAsync(product);
+            await _unitOfWork.SaveChangesAsync();
 
             // 2. Generate Smart SKU
-            string smartSku = GenerateSmartSKU(product.Id);
+            string smartSku = await GenerateSmartSKUAsync(product.Id);
 
             // 3. Create Variation Entity
             var variation = new ProductVariation
@@ -48,8 +49,8 @@ namespace ERP_Application.Services
                 SKU = smartSku
             };
 
-            variationRepo.Create(variation);
-            _unitOfWork.SaveChanges();
+            await variationRepo.CreateAsync(variation);
+            await _unitOfWork.SaveChangesAsync();
 
             // 4. Create Package Entity
             var package = new ProductPackage
@@ -62,14 +63,14 @@ namespace ERP_Application.Services
                 Barcode = GenerateBarcode(variation.Id)
             };
 
-            packageRepo.Create(package);
-            _unitOfWork.SaveChanges();
+            await packageRepo.CreateAsync(package);
+            await _unitOfWork.SaveChangesAsync();
 
-            // 5. Add Initial Stock
-            AddInitialStockToMain(package.Id, dto.InitialQuantity);
+            // 5. Add Initial Stock (Async)
+            await AddInitialStockToMainAsync(package.Id, dto.InitialQuantity);
 
-            // 6. Fetch Names for Response
-            var packageTypeEntity = _unitOfWork.PackageTypes.FindById(dto.PackageTypeId);
+            // 6. Fetch Names for Response (Async)
+            var packageTypeEntity = await _unitOfWork.PackageTypes.FindByIdAsync(dto.PackageTypeId);
             string pkgName = packageTypeEntity != null ? packageTypeEntity.Name : "Unknown";
 
             // Return DTO
@@ -78,7 +79,7 @@ namespace ERP_Application.Services
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
-                CategoryName = "General", // Placeholder or fetch real name
+                CategoryName = "General",
                 Variations = new List<VariationResponseDto>
                 {
                     new VariationResponseDto
@@ -103,49 +104,12 @@ namespace ERP_Application.Services
             };
         }
 
-        public ProductResponseDto? GetProductById(int id)
-        {
-            // We start from the Products table
-            var query = _unitOfWork.Products.GetAllQueryable()
-                .Where(p => p.Id == id)
-                .Select(p => new ProductResponseDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    // Check for null category safely
-                    CategoryName = p.Category != null ? p.Category.Name : "Uncategorized",
-
-                    // Map Variations
-                    Variations = p.Variations.Select(v => new VariationResponseDto
-                    {
-                        Id = v.Id,
-                        Name = v.Name,
-                        Flavor = v.Flavor,
-                        SKU = v.SKU,
-
-                        // Map Packages inside Variation
-                        Packages = v.ProductPackages.Select(pkg => new PackageResponseDto
-                        {
-                            Id = pkg.Id,
-                            PackageTypeName = pkg.PackageType.Name, // Navigation Property
-                            QinP = pkg.QinP,
-                            SalesPrice = pkg.SalesPrice,
-                            Barcode = pkg.Barcode
-                        }).ToList()
-                    }).ToList()
-                });
-
-            // Execute the query
-            return query.FirstOrDefault();
-        }
-
         // ==========================================================
-        // 2. ADD VARIATION (Returns DTO)
+        // 2. ADD VARIATION (Async)
         // ==========================================================
-        public VariationResponseDto AddVariation(int productId, VariationInsertDto dto)
+        public async Task<VariationResponseDto> AddVariationAsync(int productId, VariationInsertDto dto)
         {
-            string smartSku = GenerateSmartSKU(productId);
+            string smartSku = await GenerateSmartSKUAsync(productId);
 
             var variation = new ProductVariation
             {
@@ -156,8 +120,8 @@ namespace ERP_Application.Services
                 SKU = smartSku
             };
 
-            variationRepo.Create(variation);
-            _unitOfWork.SaveChanges();
+            await variationRepo.CreateAsync(variation);
+            await _unitOfWork.SaveChangesAsync();
 
             var package = new ProductPackage
             {
@@ -169,13 +133,12 @@ namespace ERP_Application.Services
                 Barcode = GenerateBarcode(variation.Id)
             };
 
-            packageRepo.Create(package);
-            _unitOfWork.SaveChanges();
+            await packageRepo.CreateAsync(package);
+            await _unitOfWork.SaveChangesAsync();
 
-            AddInitialStockToMain(package.Id, dto.InitialQuantity);
+            await AddInitialStockToMainAsync(package.Id, dto.InitialQuantity);
 
-            // Fetch Package Name for DTO
-            var packageTypeEntity = _unitOfWork.PackageTypes.FindById(dto.PackageTypeId);
+            var packageTypeEntity = await _unitOfWork.PackageTypes.FindByIdAsync(dto.PackageTypeId);
             string pkgName = packageTypeEntity != null ? packageTypeEntity.Name : "Unknown";
 
             return new VariationResponseDto
@@ -199,9 +162,9 @@ namespace ERP_Application.Services
         }
 
         // ==========================================================
-        // 3. ADD PACKAGE (Returns DTO)
+        // 3. ADD PACKAGE (Async)
         // ==========================================================
-        public PackageResponseDto AddPackage(int variationId, PackageLinkInsertDto dto)
+        public async Task<PackageResponseDto> AddPackageAsync(int variationId, PackageLinkInsertDto dto)
         {
             var package = new ProductPackage
             {
@@ -213,13 +176,12 @@ namespace ERP_Application.Services
                 Barcode = GenerateBarcode(variationId)
             };
 
-            packageRepo.Create(package);
-            _unitOfWork.SaveChanges();
+            await packageRepo.CreateAsync(package);
+            await _unitOfWork.SaveChangesAsync();
 
-            AddInitialStockToMain(package.Id, dto.InitialQuantity);
+            await AddInitialStockToMainAsync(package.Id, dto.InitialQuantity);
 
-            // Fetch Package Name for DTO
-            var packageTypeEntity = _unitOfWork.PackageTypes.FindById(dto.PackageTypeId);
+            var packageTypeEntity = await _unitOfWork.PackageTypes.FindByIdAsync(dto.PackageTypeId);
             string pkgName = packageTypeEntity != null ? packageTypeEntity.Name : "Unknown";
 
             return new PackageResponseDto
@@ -233,34 +195,66 @@ namespace ERP_Application.Services
         }
 
         // ==========================================================
-        // 4. GET ALL PRODUCTS
+        // 4. GET ALL PRODUCTS (Async)
         // ==========================================================
-        public IEnumerable<ProductSummaryDto> GetAllProducts()
+        public async Task<IEnumerable<ProductSummaryDto>> GetAllProductsAsync()
         {
-            return _unitOfWork.Products.GetAllQueryable()
+            return await _unitOfWork.Products.GetAllQueryable()
                 .Select(p => new ProductSummaryDto
                 {
                     Id = p.Id,
                     Name = p.Name,
-
-                    // ✅ Efficient SQL Count
                     VariationCount = p.Variations.Count()
                 })
-                .ToList();
+                .ToListAsync(); // ✅ Async Execution
         }
 
         // ==========================================================
-        // 🛠️ HELPERS
+        // 5. GET PRODUCT BY ID (Async)
+        // ==========================================================
+        public async Task<ProductResponseDto?> GetProductByIdAsync(int id)
+        {
+            var query = _unitOfWork.Products.GetAllQueryable()
+                .Where(p => p.Id == id)
+                .Select(p => new ProductResponseDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    CategoryName = p.Category != null ? p.Category.Name : "Uncategorized",
+                    Variations = p.Variations.Select(v => new VariationResponseDto
+                    {
+                        Id = v.Id,
+                        Name = v.Name,
+                        Flavor = v.Flavor,
+                        SKU = v.SKU,
+                        Packages = v.ProductPackages.Select(pkg => new PackageResponseDto
+                        {
+                            Id = pkg.Id,
+                            PackageTypeName = pkg.PackageType.Name,
+                            QinP = pkg.QinP,
+                            SalesPrice = pkg.SalesPrice,
+                            Barcode = pkg.Barcode
+                        }).ToList()
+                    }).ToList()
+                });
+
+            return await query.FirstOrDefaultAsync(); // ✅ Async Execution
+        }
+
+        // ==========================================================
+        // 🛠️ HELPERS (Async where needed)
         // ==========================================================
 
-        private void AddInitialStockToMain(int packageId, decimal quantity)
+        private async Task AddInitialStockToMainAsync(int packageId, decimal quantity)
         {
             if (quantity > 0)
             {
-                // 1. Find Main Warehouse
-                var mainWarehouse = warehouseRepo.GetAll().FirstOrDefault(w => w.IsMainWarehouse);
+                // Find Main Warehouse (Async)
+                var mainWarehouse = await warehouseRepo.GetAllQueryable()
+                    .FirstOrDefaultAsync(w => w.IsMainWarehouse);
 
-                // 2. Safety: Auto-create if missing (Defensive Coding)
+                // Safety: Auto-create
                 if (mainWarehouse == null)
                 {
                     mainWarehouse = new Warehouse
@@ -269,11 +263,11 @@ namespace ERP_Application.Services
                         Location = "System (Virtual)",
                         IsMainWarehouse = true
                     };
-                    warehouseRepo.Create(mainWarehouse);
-                    _unitOfWork.SaveChanges();
+                    await warehouseRepo.CreateAsync(mainWarehouse);
+                    await _unitOfWork.SaveChangesAsync();
                 }
 
-                // 3. Add Stock
+                // Add Stock
                 var stock = new WarehouseStock
                 {
                     WarehouseId = mainWarehouse.Id,
@@ -281,14 +275,18 @@ namespace ERP_Application.Services
                     Quantity = quantity,
                     MinStockLevel = 0
                 };
-                stockRepo.Create(stock);
-                _unitOfWork.SaveChanges();
+                await stockRepo.CreateAsync(stock);
+                await _unitOfWork.SaveChangesAsync();
             }
         }
 
-        private string GenerateSmartSKU(int productId)
+        private async Task<string> GenerateSmartSKUAsync(int productId)
         {
-            var count = variationRepo.GetAll().Count(v => v.ProductId == productId);
+            // Use CountAsync for database efficiency
+            var count = await variationRepo.GetAllQueryable()
+                .Where(v => v.ProductId == productId)
+                .CountAsync();
+
             var nextNumber = count + 1;
             return $"PROD{productId}-VAR{nextNumber.ToString("D3")}";
         }

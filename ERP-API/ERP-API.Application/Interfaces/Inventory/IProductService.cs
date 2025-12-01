@@ -1,23 +1,24 @@
-﻿using ERP_Application.DTOs.Inventory.Product;
-using ERP_Application.DTOs.Inventory.Product.Responses;
-using ERP_DataLayer.Entities.Inventory;
+﻿using ERP_API.Application.DTOs.Inventory.Product;
+using ERP_API.Application.DTOs.Inventory.Product.Responses;
+using ERP_API.DataAccess.Entities.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.Contracts
+namespace ERP_API.Application.Interfaces
 {
     public interface IProductService
     {
-        ProductResponseDto AddProduct(ProductInsertDto dto);
-        IEnumerable<ProductSummaryDto> GetAllProducts();
+        Task<ProductResponseDto> AddProductAsync(ProductInsertDto dto);
 
-        ProductResponseDto? GetProductById(int id);
+        Task<IEnumerable<ProductSummaryDto>> GetAllProductsAsync();
 
-        // Updated Return Types:
-        VariationResponseDto AddVariation(int productId, VariationInsertDto dto);
-        PackageResponseDto AddPackage(int variationId, PackageLinkInsertDto dto);
+        Task<ProductResponseDto?> GetProductByIdAsync(int id);
+
+        Task<VariationResponseDto> AddVariationAsync(int productId, VariationInsertDto dto);
+
+        Task<PackageResponseDto> AddPackageAsync(int variationId, PackageLinkInsertDto dto);
     }
 }

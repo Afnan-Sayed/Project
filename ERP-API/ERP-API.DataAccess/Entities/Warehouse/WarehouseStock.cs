@@ -1,11 +1,11 @@
-﻿using ERP_DataLayer.Entities.Inventory;
+﻿using ERP_API.DataAccess.Entities.Inventory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_DataLayer.Entities.Warehouse
+namespace ERP_API.DataAccess.Entities.Warehouse
 {
     public class WarehouseStock
     {

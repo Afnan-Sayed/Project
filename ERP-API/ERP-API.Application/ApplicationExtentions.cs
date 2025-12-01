@@ -1,5 +1,6 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.Services;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.Interfaces.Inventory;
+using ERP_API.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application
+namespace ERP_API.Application
 {
     public static class ApplicationExtensions
     {

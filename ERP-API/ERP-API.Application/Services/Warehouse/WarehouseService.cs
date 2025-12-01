@@ -1,14 +1,15 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.Warehouse;
-using ERP_DataLayer.Contracts;
-using ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.DTOs.Warehouse;
+using ERP_API.DataAccess.Interfaces;
+using ERP_API.DataAccess.Entities.Warehouse;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.Services
+namespace ERP_API.Application.Services
 {
     public class WarehouseService : IWarehouseService
     {
@@ -18,14 +19,15 @@ namespace ERP_Application.Services
         {
             _unitOfWork = unitOfWork;
 
-            // ✅ AUTOMATIC SETUP: Ensure Main Warehouse exists
+            // Ensure Main Warehouse exists.
+            // Since Constructors cannot be Async, we execute this synchronously here.
             EnsureMainWarehouseExists();
         }
 
         private void EnsureMainWarehouseExists()
         {
-            // Check if a warehouse with IsMainWarehouse = true already exists
-            var mainExists = _unitOfWork.Warehouses.GetAll()
+            // We use .Result or Wait() here because we are in a constructor
+            var mainExists = _unitOfWork.Warehouses.GetAllQueryable()
                 .Any(w => w.IsMainWarehouse);
 
             if (!mainExists)
@@ -37,137 +39,143 @@ namespace ERP_Application.Services
                     IsMainWarehouse = true
                 };
 
-                _unitOfWork.Warehouses.Create(mainWarehouse);
-                _unitOfWork.SaveChanges();
+                // Sync Create/Save
+                _unitOfWork.Warehouses.CreateAsync(mainWarehouse);
+                _unitOfWork.SaveChangesAsync();
             }
         }
 
-        public Warehouse AddWarehouse(WarehouseInsertDto dto)
+        // 1. ADD WAREHOUSE (Async)
+        public async Task<Warehouse> AddWarehouseAsync(WarehouseInsertDto dto)
         {
             var warehouse = new Warehouse
             {
                 Name = dto.Name,
                 Location = dto.Location,
-                IsMainWarehouse = false // User created warehouses are always physical (not Main)
+                IsMainWarehouse = false
             };
 
-            _unitOfWork.Warehouses.Create(warehouse);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.Warehouses.CreateAsync(warehouse);
+            await _unitOfWork.SaveChangesAsync();
 
             return warehouse;
         }
 
-        public IEnumerable<WarehouseItemDto> GetAllWarehouses()
+        // 2. GET ALL (Async)
+        public async Task<IEnumerable<WarehouseItemDto>> GetAllWarehousesAsync()
         {
-            return _unitOfWork.Warehouses.GetAll()
+            return await _unitOfWork.Warehouses.GetAllQueryable()
                 .Select(w => new WarehouseItemDto
                 {
                     Id = w.Id,
                     Name = w.Name,
                     Location = w.Location,
                     IsMainWarehouse = w.IsMainWarehouse
-                });
+                })
+                .ToListAsync(); // ✅ Async
         }
 
-        public bool TransferStock(StockTransferDto dto)
+        // 3. TRANSFER STOCK (Async)
+        public async Task<bool> TransferStockAsync(StockTransferDto dto)
         {
-            // 1. Validate: Ensure warehouses exist (Optional but good practice)
-            // In Mock data we trust the IDs, in Real DB you might check existence.
+            // A. Find Source Stock
+            var sourceStock = await _unitOfWork.WarehouseStocks.GetAllQueryable()
+                .FirstOrDefaultAsync(ws => ws.WarehouseId == dto.FromWarehouseId
+                                        && ws.ProductPackageId == dto.ProductPackageId);
 
-            // 2. Find Source Stock (FROM)
-            var sourceStock = _unitOfWork.WarehouseStocks.GetAll()
-                .FirstOrDefault(ws => ws.WarehouseId == dto.FromWarehouseId
-                                   && ws.ProductPackageId == dto.ProductPackageId);
-
-            // CHECK: Do we have enough?
             if (sourceStock == null || sourceStock.Quantity < dto.Quantity)
             {
-                // In a real app, you might throw a custom exception like "InsufficientStockException"
-                // For now, we return false to indicate failure.
                 return false;
             }
 
-            // 3. Find Destination Stock (TO)
-            var destStock = _unitOfWork.WarehouseStocks.GetAll()
-                .FirstOrDefault(ws => ws.WarehouseId == dto.ToWarehouseId
-                                   && ws.ProductPackageId == dto.ProductPackageId);
+            // B. Find Destination Stock
+            var destStock = await _unitOfWork.WarehouseStocks.GetAllQueryable()
+                .FirstOrDefaultAsync(ws => ws.WarehouseId == dto.ToWarehouseId
+                                        && ws.ProductPackageId == dto.ProductPackageId);
 
-            // 4. EXECUTE TRANSFER
-
-            // A. Decrease Source
+            // C. Execute Logic
             sourceStock.Quantity -= dto.Quantity;
-            _unitOfWork.WarehouseStocks.Update(sourceStock); // Update Logic
+            _unitOfWork.WarehouseStocks.Update(sourceStock);
 
-            // B. Increase Destination
             if (destStock != null)
             {
-                // Case: Stock record already exists -> Just add qty
                 destStock.Quantity += dto.Quantity;
                 _unitOfWork.WarehouseStocks.Update(destStock);
             }
             else
             {
-                // Case: New item for this warehouse -> Create record
                 var newStock = new WarehouseStock
                 {
                     WarehouseId = dto.ToWarehouseId,
                     ProductPackageId = dto.ProductPackageId,
                     Quantity = dto.Quantity,
-                    MinStockLevel = 0 // Default
+                    MinStockLevel = 0
                 };
-                _unitOfWork.WarehouseStocks.Create(newStock);
+                await _unitOfWork.WarehouseStocks.CreateAsync(newStock);
             }
 
+            // D. Log the Transfer
             var transferLog = new StockTransferLog
             {
-                TransferDate = DateTime.UtcNow, // Always use UTC for server timestamps
+                TransferDate = DateTime.UtcNow,
                 FromWarehouseId = dto.FromWarehouseId,
                 ToWarehouseId = dto.ToWarehouseId,
                 ProductPackageId = dto.ProductPackageId,
                 Quantity = dto.Quantity
             };
 
-            _unitOfWork.StockTransferLogs.Create(transferLog);
-
-            // 5. Commit Transaction (Saves Updates + The Log at the same time)
-            _unitOfWork.SaveChanges();
-
-            // 5. Commit Transaction
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.StockTransferLogs.CreateAsync(transferLog);
+            await _unitOfWork.SaveChangesAsync(); // ✅ Saves everything
 
             return true;
         }
 
-        public IEnumerable<WarehouseStockDto> GetWarehouseStock(int warehouseId)
+        // 4. GET WAREHOUSE STOCK (Async)
+        public async Task<IEnumerable<WarehouseStockDto>> GetWarehouseStockAsync(int warehouseId)
         {
             var stockItems = _unitOfWork.WarehouseStocks.GetAllQueryable()
                 .Where(w => w.WarehouseId == warehouseId);
 
             var query = from stock in stockItems
-                        join pkg in _unitOfWork.ProductPackages.GetAllQueryable()
-                            on stock.ProductPackageId equals pkg.Id
-                        join pt in _unitOfWork.PackageTypes.GetAllQueryable()
-                            on pkg.PackageTypeId equals pt.Id
-                        join var in _unitOfWork.ProductVariations.GetAllQueryable()
-                            on pkg.ProductVariationId equals var.Id
-                        join prod in _unitOfWork.Products.GetAllQueryable()
-                            on var.ProductId equals prod.Id
+                        join pkg in _unitOfWork.ProductPackages.GetAllQueryable() on stock.ProductPackageId equals pkg.Id
+                        join pt in _unitOfWork.PackageTypes.GetAllQueryable() on pkg.PackageTypeId equals pt.Id
+                        join var in _unitOfWork.ProductVariations.GetAllQueryable() on pkg.ProductVariationId equals var.Id
+                        join prod in _unitOfWork.Products.GetAllQueryable() on var.ProductId equals prod.Id
                         select new WarehouseStockDto
                         {
                             StockId = stock.Id,
-
                             ProductPackageId = pkg.Id,
-
                             ProductName = prod.Name,
                             VariationName = var.Name,
                             PackageName = pt.Name,
                             Quantity = stock.Quantity
                         };
 
-            return query.ToList();
+            return await query.ToListAsync(); // ✅ Async
         }
 
-        public IEnumerable<StockTransferLogDto> GetTransferLogs()
+        // 5. GET DETAILS (Async)
+        public async Task<WarehouseDetailsDto?> GetWarehouseDetailsAsync(int id)
+        {
+            var warehouse = await _unitOfWork.Warehouses.FindByIdAsync(id);
+
+            if (warehouse == null) return null;
+
+            // Reuse the async method above
+            var stockList = await GetWarehouseStockAsync(id);
+
+            return new WarehouseDetailsDto
+            {
+                Id = warehouse.Id,
+                Name = warehouse.Name,
+                Location = warehouse.Location,
+                IsMainWarehouse = warehouse.IsMainWarehouse,
+                StockItems = stockList
+            };
+        }
+
+        // 6. GET TRANSFER LOGS (Async)
+        public async Task<IEnumerable<StockTransferLogDto>> GetTransferLogsAsync()
         {
             var logs = _unitOfWork.StockTransferLogs.GetAllQueryable();
             var warehouses = _unitOfWork.Warehouses.GetAllQueryable();
@@ -177,19 +185,13 @@ namespace ERP_Application.Services
             var packageTypes = _unitOfWork.PackageTypes.GetAllQueryable();
 
             var query = from log in logs
-                            // 1. Join Source Warehouse
                         join whFrom in warehouses on log.FromWarehouseId equals whFrom.Id
-                        // 2. Join Destination Warehouse
                         join whTo in warehouses on log.ToWarehouseId equals whTo.Id
-                        // 3. Join Product Hierarchy
                         join pkg in packages on log.ProductPackageId equals pkg.Id
                         join pt in packageTypes on pkg.PackageTypeId equals pt.Id
                         join var in variations on pkg.ProductVariationId equals var.Id
                         join prod in products on var.ProductId equals prod.Id
-
-                        // 4. Order by latest first
                         orderby log.TransferDate descending
-
                         select new StockTransferLogDto
                         {
                             Id = log.Id,
@@ -202,8 +204,7 @@ namespace ERP_Application.Services
                             Quantity = log.Quantity
                         };
 
-            return query.ToList();
+            return await query.ToListAsync(); // ✅ Async
         }
-
     }
 }

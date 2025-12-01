@@ -1,13 +1,13 @@
-﻿using ERP_DataLayer.Entities.Inventory;
-using ERP_DataLayer.Entities.InventoryAdjustment;
-using ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.DataAccess.Entities.Inventory;
+using ERP_API.DataAccess.Entities.InventoryAdjustment;
+using ERP_API.DataAccess.Entities.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_DataLayer.Contracts
+namespace ERP_API.DataAccess.Interfaces
 {
     public interface IErpUnitOfWork
     {
@@ -24,6 +24,6 @@ namespace ERP_DataLayer.Contracts
 
         IBaseRepository<InventoryAdjustment, int> InventoryAdjustments { get; }
 
-        void SaveChanges();
+        Task SaveChangesAsync();
     }
 }

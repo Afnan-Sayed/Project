@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{FDFEF79D-B6F9-432E-B519-DCDC01FB7A26}|ERP-API\\ERP-API.API\\ERP-API.API.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-api\\erp-api.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FDFEF79D-B6F9-432E-B519-DCDC01FB7A26}|ERP-API\\ERP-API.API\\ERP-API.API.csproj|solutionrelative:erp-api\\erp-api.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDFEF79D-B6F9-432E-B519-DCDC01FB7A26}|ERP-API\\ERP-API.API\\ERP-API.API.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-api\\erp-api.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FDFEF79D-B6F9-432E-B519-DCDC01FB7A26}|ERP-API\\ERP-API.API\\ERP-API.API.csproj|solutionrelative:erp-api\\erp-api.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDFEF79D-B6F9-432E-B519-DCDC01FB7A26}|ERP-API\\ERP-API.API\\ERP-API.API.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-api\\erp-api.api\\erp-api.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{FDFEF79D-B6F9-432E-B519-DCDC01FB7A26}|ERP-API\\ERP-API.API\\ERP-API.API.csproj|solutionrelative:erp-api\\erp-api.api\\erp-api.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.API\\appsettings.json",
+              "RelativeDocumentMoniker": "ERP-API\\ERP-API.API\\appsettings.json",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.API\\appsettings.json",
+              "RelativeToolTip": "ERP-API\\ERP-API.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-01T12:04:57.247Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ERP-API.API",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.API\\ERP-API.API.csproj",
+              "RelativeDocumentMoniker": "ERP-API\\ERP-API.API\\ERP-API.API.csproj",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.API\\ERP-API.API.csproj",
+              "RelativeToolTip": "ERP-API\\ERP-API.API\\ERP-API.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-01T11:58:30.296Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.API\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "ERP-API\\ERP-API.API\\Properties\\launchSettings.json",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.API\\Properties\\launchSettings.json",
+              "RelativeToolTip": "ERP-API\\ERP-API.API\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-12-01T11:46:55.333Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

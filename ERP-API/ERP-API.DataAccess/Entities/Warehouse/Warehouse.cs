@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_DataLayer.Entities.Warehouse
+namespace ERP_API.DataAccess.Entities.Warehouse
 {
     public class Warehouse
     {

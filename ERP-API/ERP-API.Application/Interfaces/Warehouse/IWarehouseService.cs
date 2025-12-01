@@ -1,25 +1,24 @@
-﻿using ERP_Application.DTOs.Warehouse;
-using ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.Application.DTOs.Warehouse;
+using ERP_API.DataAccess.Entities.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.Contracts
+namespace ERP_API.Application.Interfaces
 {
     public interface IWarehouseService
     {
-        Warehouse AddWarehouse(WarehouseInsertDto dto);
-        IEnumerable<WarehouseItemDto> GetAllWarehouses();
+        Task<Warehouse> AddWarehouseAsync(WarehouseInsertDto dto);
 
-        // Returns true if successful, false (or throws exception) if failed
-        bool TransferStock(StockTransferDto dto);
+        Task<IEnumerable<WarehouseItemDto>> GetAllWarehousesAsync();
 
-        IEnumerable<WarehouseStockDto> GetWarehouseStock(int warehouseId);
+        Task<bool> TransferStockAsync(StockTransferDto dto);
 
-        // Returns a list of all transfers that happened in history
-        IEnumerable<StockTransferLogDto> GetTransferLogs();
+        Task<IEnumerable<WarehouseStockDto>> GetWarehouseStockAsync(int warehouseId);
+
+        Task<IEnumerable<StockTransferLogDto>> GetTransferLogsAsync();
 
     }
 }

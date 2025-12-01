@@ -1,12 +1,12 @@
-﻿using ERP_DataLayer.Entities.Inventory;
-using WarehouseNS = ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.DataAccess.Entities.Inventory;
+using WarehouseNS = ERP_API.DataAccess.Entities.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_DataLayer.Entities.InventoryAdjustment
+namespace ERP_API.DataAccess.Entities.InventoryAdjustment
 {
     public class InventoryAdjustment
     {

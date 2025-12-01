@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-MVC\\ERP-MVC.csproj": {}
+    "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\ERP-MVC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-MVC\\ERP-MVC.csproj": {
+    "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\ERP-MVC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-MVC\\ERP-MVC.csproj",
+        "projectUniqueName": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\ERP-MVC.csproj",
         "projectName": "ERP-MVC",
-        "projectPath": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-MVC\\ERP-MVC.csproj",
-        "packagesPath": "C:\\Users\\afnan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-MVC\\obj\\",
+        "projectPath": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\ERP-MVC.csproj",
+        "packagesPath": "C:\\Users\\adamm\\.nuget\\packages\\",
+        "outputPath": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\afnan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\adamm\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

@@ -1,6 +1,6 @@
-﻿using ERP_DataLayer.Entities.Inventory;
-using ERP_DataLayer.Entities.InventoryAdjustment;
-using ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.DataAccess.Entities.Inventory;
+using ERP_API.DataAccess.Entities.InventoryAdjustment;
+using ERP_API.DataAccess.Entities.Warehouse;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_DataLayer.DataContext
+namespace ERP_API.DataAccess.DataContext
 {
     internal class ErpDBContext: DbContext
     {

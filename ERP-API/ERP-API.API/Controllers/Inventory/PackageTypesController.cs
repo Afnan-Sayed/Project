@@ -1,8 +1,8 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.Inventory.Packages;
+﻿using ERP_API.Application.Interfaces.Inventory;
+using ERP_API.Application.DTOs.Inventory.Packages;
 using Microsoft.AspNetCore.Mvc;
 
-namespace G3_API.API.Controllers
+namespace ERP_API.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -10,36 +10,29 @@ namespace G3_API.API.Controllers
     {
         private readonly IPackageTypeService _packageTypeService;
 
-        // Constructor Injection: Ask the container for the Service we created earlier
         public PackageTypesController(IPackageTypeService packageTypeService)
         {
             _packageTypeService = packageTypeService;
         }
 
-        // GET: api/PackageTypes
-        // Used to fill the "Package Type" Dropdown in your UI
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var result = _packageTypeService.GetAllPackageTypes();
+            var result = await _packageTypeService.GetAllPackageTypesAsync();
             return Ok(result);
         }
 
-        // POST: api/PackageTypes
-        // Used to define a new type (e.g. "Barrel - Liter")
         [HttpPost]
-        public IActionResult Create(PackageTypeInsertDto dto)
+        public async Task<IActionResult> Create(PackageTypeInsertDto dto)
         {
-            var createdPackageType = _packageTypeService.AddPackageType(dto);
+            var createdPackageType = await _packageTypeService.AddPackageTypeAsync(dto);
             return Ok(createdPackageType);
         }
 
-        // GET: api/PackageTypes/1/Products
-        // Returns the package info AND the list of products using it
         [HttpGet("{id}/Products")]
-        public IActionResult GetPackageDetails(int id)
+        public async Task<IActionResult> GetPackageDetails(int id)
         {
-            var result = _packageTypeService.GetPackageDetailsWithProducts(id);
+            var result = await _packageTypeService.GetPackageDetailsWithProductsAsync(id);
 
             if (result == null)
             {

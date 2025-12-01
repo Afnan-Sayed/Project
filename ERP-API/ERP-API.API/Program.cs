@@ -1,8 +1,8 @@
-﻿using ERP_DataLayer;           // To access AddDataAccessServices
-using ERP_Application;      // To access AddApplicationServices
+﻿using ERP_API.DataAccess;           // To access AddDataAccessServices
+using ERP_API.Application;      // To access AddApplicationServices
 using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI; // Add this using directive
 using Microsoft.AspNetCore.Builder; // Add this using directive
+using Swashbuckle.AspNetCore.SwaggerUI; // Add this using directive
 
 namespace ERP_API
 {
@@ -32,7 +32,7 @@ namespace ERP_API
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();   // If using standard Swagger
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(); // This requires Microsoft.AspNetCore.Builder
                 // OR app.MapOpenApi(); if using .NET 9 OpenApi
             }
 

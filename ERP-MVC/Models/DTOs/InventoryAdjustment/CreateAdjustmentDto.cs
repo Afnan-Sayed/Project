@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.DTOs.InventoryAdjustment
+namespace ERP_MVC.Models.DTOs.InventoryAdjustment
 {
     public class CreateAdjustmentDto
     {

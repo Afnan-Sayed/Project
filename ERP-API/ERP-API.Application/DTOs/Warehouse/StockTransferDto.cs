@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.DTOs.Warehouse
+namespace ERP_API.Application.DTOs.Warehouse
 {
     public class StockTransferDto
     {

@@ -1,15 +1,16 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.InventoryAdjustment;
-using ERP_DataLayer.Contracts;
-using ERP_DataLayer.Entities.InventoryAdjustment;
-using ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.DTOs.InventoryAdjustment;
+using ERP_API.DataAccess.Interfaces;
+using ERP_API.DataAccess.Entities.InventoryAdjustment;
+using ERP_API.DataAccess.Entities.Warehouse;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_Application.Services
+namespace ERP_API.Application.Services
 {
     public class InventoryAdjustmentService : IInventoryAdjustmentService
     {
@@ -19,24 +20,27 @@ namespace ERP_Application.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public InventoryAdjustment CreateAdjustment(CreateAdjustmentDto dto)
-        {
-            // 1. Find the current stock record
-            var stock = _unitOfWork.WarehouseStocks.GetAll()
-                .FirstOrDefault(ws => ws.WarehouseId == dto.WarehouseId
-                                   && ws.ProductPackageId == dto.ProductPackageId);
 
-            // Handle case where stock doesn't exist yet (e.g. found new item in empty warehouse)
+        public async Task<InventoryAdjustment> CreateAdjustmentAsync(CreateAdjustmentDto dto)
+        {
+            // 1. Find the current stock record (Async)
+            // Use Queryable + FirstOrDefaultAsync for SQL efficiency
+            var stock = await _unitOfWork.WarehouseStocks.GetAllQueryable()
+                .FirstOrDefaultAsync(ws => ws.WarehouseId == dto.WarehouseId
+                                        && ws.ProductPackageId == dto.ProductPackageId);
+
+            // Handle case where stock doesn't exist yet
             if (stock == null)
             {
                 stock = new WarehouseStock
                 {
                     WarehouseId = dto.WarehouseId,
                     ProductPackageId = dto.ProductPackageId,
-                    Quantity = 0, // Start at 0
+                    Quantity = 0,
                     MinStockLevel = 0
                 };
-                _unitOfWork.WarehouseStocks.Create(stock);
+                // Use Async Create if available, or Sync is fine since it's just tracking
+                await _unitOfWork.WarehouseStocks.CreateAsync(stock);
             }
 
             // 2. Calculate the Math
@@ -44,7 +48,6 @@ namespace ERP_Application.Services
             decimal newQty = dto.NewQuantity;
             decimal diff = newQty - oldQty;
 
-            // If no change, return null or throw error (optional)
             if (diff == 0) return null;
 
             // 3. Update the Stock
@@ -60,18 +63,18 @@ namespace ERP_Application.Services
                 OldQuantity = oldQty,
                 NewQuantity = newQty,
                 Difference = diff,
-                AdjustmentType = diff > 0 ? "Increase" : "Decrease", // Auto-detect type
+                AdjustmentType = diff > 0 ? "Increase" : "Decrease",
                 Reason = dto.Reason,
-                UserId = null // For now
+                UserId = null
             };
 
-            _unitOfWork.InventoryAdjustments.Create(adjustment);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.InventoryAdjustments.CreateAsync(adjustment);
+            await _unitOfWork.SaveChangesAsync(); // Saves both the Stock Update and the Log
 
             return adjustment;
         }
 
-        public IEnumerable<AdjustmentLogDto> GetAdjustmentLogs()
+        public async Task<IEnumerable<AdjustmentLogDto>> GetAdjustmentLogsAsync()
         {
             var adjs = _unitOfWork.InventoryAdjustments.GetAllQueryable();
             var warehouses = _unitOfWork.Warehouses.GetAllQueryable();
@@ -98,7 +101,8 @@ namespace ERP_Application.Services
                             Difference = a.Difference
                         };
 
-            return query.ToList();
+            // ✅ Use Async ToList
+            return await query.ToListAsync();
         }
     }
 }

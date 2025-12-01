@@ -1,6 +1,5 @@
-﻿using ERP_DataLayer.Contracts;
-using ERP_DataLayer.DataContext;
-using ERP_DataLayer.DataContext.ERP_DataLayer.DataContext;
+﻿using ERP_API.DataAccess.Interfaces;
+using ERP_API.DataAccess.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,8 +8,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ERP_API.DataAccess.DataContext.ERP_API.DataAccess.DataContext;
 
-namespace ERP_DataLayer
+namespace ERP_API.DataAccess
 {
     public static class DataAccessExtensions
     {

@@ -1,14 +1,16 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.Inventory.Packages;
-using ERP_DataLayer.Contracts;
-using ERP_DataLayer.Entities.Inventory;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.DTOs.Inventory.Packages;
+using ERP_API.DataAccess.Interfaces;
+using ERP_API.DataAccess.Entities.Inventory;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ERP_API.Application.Interfaces.Inventory;
 
-namespace ERP_Application.Services
+namespace ERP_API.Application.Services
 {
     public class PackageTypeService : IPackageTypeService
     {
@@ -19,18 +21,22 @@ namespace ERP_Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<PackageTypeItemDto> GetAllPackageTypes()
+        // 1. GET ALL (Async)
+        public async Task<IEnumerable<PackageTypeItemDto>> GetAllPackageTypesAsync()
         {
-            return _unitOfWork.PackageTypes.GetAll()
+            // Use Queryable + Select + ToListAsync for maximum efficiency
+            return await _unitOfWork.PackageTypes.GetAllQueryable()
                 .Select(pt => new PackageTypeItemDto
                 {
                     Id = pt.Id,
                     Name = pt.Name,
                     UnitOfMeasurement = pt.UnitOfMeasurement
-                });
+                })
+                .ToListAsync(); // ✅ Executed Asynchronously
         }
 
-        public PackageType AddPackageType(PackageTypeInsertDto dto)
+        // 2. ADD (Async)
+        public async Task<PackageType> AddPackageTypeAsync(PackageTypeInsertDto dto)
         {
             var entity = new PackageType
             {
@@ -39,31 +45,32 @@ namespace ERP_Application.Services
                 UnitOfMeasurement = dto.UnitOfMeasurement
             };
 
-            _unitOfWork.PackageTypes.Create(entity);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.PackageTypes.CreateAsync(entity);
+            await _unitOfWork.SaveChangesAsync(); // ✅ Saves to SQL Asynchronously
 
             return entity;
         }
 
-        public PackageDetailsDto GetPackageDetailsWithProducts(int packageTypeId)
+        // 3. GET DETAILS (Async)
+        public async Task<PackageDetailsDto?> GetPackageDetailsWithProductsAsync(int packageTypeId)
         {
-            // 1. Get the Package Info
-            var packageType = _unitOfWork.PackageTypes.FindById(packageTypeId);
+            // 1. Get the Package Info (Async)
+            var packageType = await _unitOfWork.PackageTypes.FindByIdAsync(packageTypeId);
+
             if (packageType == null) return null;
 
-            // 2. Get Products using this package
-            // We start with the Generic Queryable and filter it
-            var productNames = _unitOfWork.ProductPackages.GetAllQueryable() // Start Query
-                .Where(pkg => pkg.PackageTypeId == packageTypeId)            // Filter by Package
-                .Join(_unitOfWork.ProductVariations.GetAllQueryable(),       // Join Variation
+            // 2. Get Products (Async Query)
+            var productNames = await _unitOfWork.ProductPackages.GetAllQueryable()
+                .Where(pkg => pkg.PackageTypeId == packageTypeId)
+                .Join(_unitOfWork.ProductVariations.GetAllQueryable(),
                       pkg => pkg.ProductVariationId,
                       var => var.Id,
                       (pkg, var) => var)
-                .Join(_unitOfWork.Products.GetAllQueryable(),                // Join Product
+                .Join(_unitOfWork.Products.GetAllQueryable(),
                       var => var.ProductId,
                       prod => prod.Id,
-                      (var, prod) => prod.Name + " - " + var.Name)           // Select Name
-                .ToList(); // EXECUTE QUERY HERE
+                      (var, prod) => prod.Name + " - " + var.Name)
+                .ToListAsync(); // ✅ Execute Query Asynchronously
 
             return new PackageDetailsDto
             {

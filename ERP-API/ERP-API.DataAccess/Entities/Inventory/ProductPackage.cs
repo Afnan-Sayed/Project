@@ -1,11 +1,11 @@
-﻿using ERP_DataLayer.Entities.Warehouse;
+﻿using ERP_API.DataAccess.Entities.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP_DataLayer.Entities.Inventory
+namespace ERP_API.DataAccess.Entities.Inventory
 {
     public class ProductPackage 
     {

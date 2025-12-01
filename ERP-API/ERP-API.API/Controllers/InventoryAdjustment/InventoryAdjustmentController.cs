@@ -1,10 +1,10 @@
-﻿using ERP_Application.Contracts;
-using ERP_Application.DTOs.InventoryAdjustment;
-using ERP_Application.Services;
+﻿using ERP_API.Application.Interfaces;
+using ERP_API.Application.DTOs.InventoryAdjustment;
+using ERP_API.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ERP_API.Controllers
+namespace ERP_API.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,19 +17,25 @@ namespace ERP_API.Controllers
             _inventoryAdjustmentService = inventoryAdjustmentService;
         }
 
-        // POST: api/Warehouses/Adjustments
+        // POST: api/InventoryAdjustment/Adjustments
         [HttpPost("Adjustments")]
-        public IActionResult CreateAdjustment(CreateAdjustmentDto dto)
+        public async Task<IActionResult> CreateAdjustment(CreateAdjustmentDto dto)
         {
-            var result = _inventoryAdjustmentService.CreateAdjustment(dto);
+            var result = await _inventoryAdjustmentService.CreateAdjustmentAsync(dto);
+
+            if (result == null)
+            {
+                return BadRequest("No changes made.");
+            }
+
             return Ok(new { Message = "Adjustment recorded successfully.", AdjustmentId = result.Id });
         }
 
-        // GET: api/Warehouses/Adjustments
+
         [HttpGet("Adjustments")]
-        public IActionResult GetAdjustmentLogs()
+        public async Task<IActionResult> GetAdjustmentLogs()
         {
-            var logs = _inventoryAdjustmentService.GetAdjustmentLogs();
+            var logs = await _inventoryAdjustmentService.GetAdjustmentLogsAsync();
             return Ok(logs);
         }
     }
