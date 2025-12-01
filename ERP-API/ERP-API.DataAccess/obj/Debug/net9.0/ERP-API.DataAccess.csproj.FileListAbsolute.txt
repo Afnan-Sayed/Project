@@ -1,11 +1,15 @@
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\bin\Debug\net9.0\ERP-API.DataAccess.deps.json
+C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\bin\Debug\net9.0\ERP-API.DataAccess.runtimeconfig.json
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\bin\Debug\net9.0\ERP-API.DataAccess.dll
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\bin\Debug\net9.0\ERP-API.DataAccess.pdb
+C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.csproj.AssemblyReference.cache
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.AssemblyInfoInputs.cache
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.AssemblyInfo.cs
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.sourcelink.json
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.dll
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\refint\ERP-API.DataAccess.dll
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.pdb
+C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ERP-API.DataAccess.genruntimeconfig.cache
 C:\Users\afnan\source\repos\DEPI-Project\ERP-API\ERP-API.DataAccess\obj\Debug\net9.0\ref\ERP-API.DataAccess.dll

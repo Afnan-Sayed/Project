@@ -15,6 +15,7 @@ C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.csproj
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.RazorAssemblyInfo.cache
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.RazorAssemblyInfo.cs
+C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.sourcelink.json
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\rjimswa.dswa.cache.json
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
