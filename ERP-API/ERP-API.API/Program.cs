@@ -1,41 +1,46 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿using ERP_API.DataAccess;           // To access AddDataAccessServices
+using ERP_API.Application;      // To access AddApplicationServices
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Builder; // Add this using directive
+using Swashbuckle.AspNetCore.SwaggerUI; // Add this using directive
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace ERP_API
 {
-    app.MapOpenApi();
-}
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-app.UseHttpsRedirection();
+            // Add services to the container.
+            builder.Services.AddControllers();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+            // OpenAPI / Swagger Configuration
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(); // or AddOpenApi() depending on .NET version
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+           
+            builder.Services
+                .AddDataAccessServices(builder.Configuration) // Wires up UnitOfWork
+                .AddApplicationServices();                    // Wires up ProductService
 
-app.Run();
+            var app = builder.Build();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();   // If using standard Swagger
+                app.UseSwaggerUI(); // This requires Microsoft.AspNetCore.Builder
+                // OR app.MapOpenApi(); if using .NET 9 OpenApi
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+
+            app.MapControllers();
+
+            app.Run();
+        }
+    }
 }
