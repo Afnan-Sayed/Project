@@ -109,23 +109,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\afnan\\.nuget\\packages\\": {},
+    "C:\\Users\\DELL\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.API\\ERP-API.API.csproj",
+      "projectUniqueName": "C:\\Users\\DELL\\Desktop\\ERP\\ERP-API\\ERP-API.API\\ERP-API.API.csproj",
       "projectName": "ERP-API.API",
-      "projectPath": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.API\\ERP-API.API.csproj",
-      "packagesPath": "C:\\Users\\afnan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.API\\obj\\",
+      "projectPath": "C:\\Users\\DELL\\Desktop\\ERP\\ERP-API\\ERP-API.API\\ERP-API.API.csproj",
+      "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\DELL\\Desktop\\ERP\\ERP-API\\ERP-API.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\afnan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -140,8 +140,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj": {
-              "projectPath": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj"
+            "C:\\Users\\DELL\\Desktop\\ERP\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj": {
+              "projectPath": "C:\\Users\\DELL\\Desktop\\ERP\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj"
             }
           }
         }
@@ -156,7 +156,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -186,7 +186,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -95,3 +95,15 @@ C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\refint\ERP-MVC
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.pdb
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.genruntimeconfig.cache
 C:\Users\afnan\source\repos\DEPI-Project\ERP-MVC\obj\Debug\net9.0\ref\ERP-MVC.dll
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.AssemblyInfoInputs.cache
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.AssemblyInfo.cs
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.csproj.CoreCompileInputs.cache
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.RazorAssemblyInfo.cache
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.RazorAssemblyInfo.cs
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.sourcelink.json
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.dll
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\refint\ERP-MVC.dll
+C:\Users\DELL\Desktop\ERP\ERP-MVC\obj\Debug\net9.0\ERP-MVC.pdb
