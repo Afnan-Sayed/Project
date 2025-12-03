@@ -56,9 +56,7 @@ namespace ERP_MVC.Services.Inventory.Product
             return response.IsSuccessStatusCode;
         }
 
-        // =========================================================
-        // ✅ NEW: Add Variation
-        // =========================================================
+    
         public async Task<bool> AddVariationAsync(int productId, VariationInsertDto dto)
         {
             // Matches API: POST api/Products/{id}/Variations
@@ -66,9 +64,6 @@ namespace ERP_MVC.Services.Inventory.Product
             return response.IsSuccessStatusCode;
         }
 
-        // =========================================================
-        // ✅ NEW: Add Package
-        // =========================================================
         public async Task<bool> AddPackageAsync(int variationId, PackageLinkInsertDto dto)
         {
             // Matches API: POST api/Products/Variations/{id}/Packages
