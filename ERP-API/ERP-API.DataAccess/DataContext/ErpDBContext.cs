@@ -105,6 +105,31 @@ namespace ERP_API.DataAccess.DataContext
             });
 
 
+
+            //Category Configuration
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
+            });
+
+            //PackageType Configuration
+            modelBuilder.Entity<PackageType>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
+                entity.Property(e => e.UnitOfMeasurement).IsRequired().HasMaxLength(50);
+            });
+
+            //Warehouse Configuration
+            modelBuilder.Entity<Warehouse>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
+            });
+
+
+
             //Product Configuration
             modelBuilder.Entity<Product>(entity =>
             {
