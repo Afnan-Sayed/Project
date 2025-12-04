@@ -8,17 +8,17 @@ namespace ERP_API.DataAccess.Identity
 {
     public class TokenResult
     {
-        public string Token { get; set; }
+        public required string Token { get; set; }
         public DateTime TokenExpiryTime { get; set; }
 
-        public List<AppClaim> Claims { get; set; }
+        public required List<AppClaim> Claims { get; set; }
 
 
     }
 
     public class AppClaim
     {
-        public string Type { get; set; }
-        public string Value { get; set; }
+        public required string Type { get; set; }
+        public required string Value { get; set; }
     }
 }

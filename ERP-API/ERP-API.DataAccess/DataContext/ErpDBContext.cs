@@ -7,6 +7,7 @@ using ERP_API.DataAccess.Entities.Sales;
 using ERP_API.DataAccess.Entities.Suppliers;
 using ERP_API.DataAccess.Entities.User;
 using ERP_API.DataAccess.Entities.Warehouse;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -18,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace ERP_API.DataAccess.DataContext
 {
-    public class ErpDBContext : DbContext
+    public class ErpDBContext : IdentityDbContext<AppUser>
     {
         public ErpDBContext(
            DbContextOptions<ErpDBContext> options) : base(options) { }
@@ -26,6 +27,14 @@ namespace ERP_API.DataAccess.DataContext
         //User Management
         public DbSet<User> Users { get; set; }
 
+
+
+        //App User
+        public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<AppUserPermission> AppUserPermissions { get; set; }
+
+        
+        
         //Suppliers & Customers
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Customer> Customers { get; set; }

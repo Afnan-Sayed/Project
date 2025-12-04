@@ -10,10 +10,10 @@ namespace ERP_API.DataAccess.Entities.Inventory
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         // Relationship: One Category has many Products
         // using "ICollection" is standard for "Many" side relationships in EF Core
-        public ICollection<Product> Products { get; set; }
+        public required ICollection<Product> Products { get; set; }
     }
 }

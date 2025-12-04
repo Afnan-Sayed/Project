@@ -584,6 +584,10 @@
         "additionalProperties": false
       },
       "UserLoginDto": {
+        "required": [
+          "password",
+          "userName"
+        ],
         "type": "object",
         "properties": {
           "userName": {
@@ -598,6 +602,13 @@
         "additionalProperties": false
       },
       "UserRegisterDto": {
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "password",
+          "userName"
+        ],
         "type": "object",
         "properties": {
           "firstName": {

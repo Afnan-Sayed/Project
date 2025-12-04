@@ -7,6 +7,7 @@ using ERP_API.DataAccess.Entities.Sales;
 using ERP_API.DataAccess.Entities.Suppliers;
 using ERP_API.DataAccess.Entities.User;
 using ERP_API.DataAccess.Entities.Warehouse;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,9 @@ namespace ERP_API.DataAccess.Interfaces
         IBaseRepository<ExpenseType, int> ExpenseTypes { get; }
         IBaseRepository<RevenueSource, int> RevenueSources { get; }
 
+
+        UserManager<AppUser> UserManager { get; }
+        public ITokenManager TokenManager { get; }
 
         void SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

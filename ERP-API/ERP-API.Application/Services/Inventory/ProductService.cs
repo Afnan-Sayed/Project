@@ -30,7 +30,8 @@ namespace ERP_API.Application.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                CategoryId = dto.CategoryId
+                CategoryId = dto.CategoryId,
+                Variations = new List<ProductVariation>() //required
             };
 
             await productRepo.CreateAsync(product);

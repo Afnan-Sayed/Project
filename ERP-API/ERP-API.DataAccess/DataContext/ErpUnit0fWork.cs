@@ -8,8 +8,10 @@ using ERP_API.DataAccess.Entities.Sales;
 using ERP_API.DataAccess.Entities.Suppliers;
 using ERP_API.DataAccess.Entities.User;
 using ERP_API.DataAccess.Entities.Warehouse;
+using ERP_API.DataAccess.Identity;
 using ERP_API.DataAccess.Interfaces;
 using ERP_API.DataAccess.Repositories;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,8 @@ namespace ERP_API.DataAccess.DataContext
     public class ErpUnitOfWork : IErpUnitOfWork
     {
         private readonly ErpDBContext _context;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly ITokenManager _tokenManager;
 
         // 1. Define Lazy fields for all repositories
         private IBaseRepository<User, Guid>? _users;
@@ -49,9 +53,12 @@ namespace ERP_API.DataAccess.DataContext
         private IBaseRepository<RevenueSource, int>? _revenueSources;
 
         // 2. Constructor: Inject Context and Initialize Lazies
-        public ErpUnitOfWork(ErpDBContext context)
+        public ErpUnitOfWork(ErpDBContext context, UserManager<AppUser> userManager, ITokenManager tokenManager)
         {
             _context = context;
+            _userManager = userManager;
+            _tokenManager = tokenManager;
+
 
             // Note: We use () => new ... (Lambda expression)
             // This ensures the object is ONLY created when someone asks for .Value
@@ -136,6 +143,15 @@ namespace ERP_API.DataAccess.DataContext
             _expenseTypes ??= new BaseRepository<ExpenseType, int>(_context);
         public IBaseRepository<RevenueSource, int> RevenueSources =>
             _revenueSources ??= new BaseRepository<RevenueSource, int>(_context);
+
+
+        public UserManager<AppUser> UserManager => _userManager;
+        public ITokenManager TokenManager => _tokenManager;
+
+
+
+
+
         public void SaveChanges()
         {
             _context.SaveChanges();

@@ -12,7 +12,11 @@ namespace ERP_API.Application.DTOs.User
         public UserLoginResult()
         {
             Errors = new List<string>();
-            TokenResult = new TokenResultDto();
+            TokenResult = new TokenResultDto
+            {
+                Token = string.Empty,
+                RefreshToken = string.Empty
+            };
         }
 
         public string UserName { get; set; }
