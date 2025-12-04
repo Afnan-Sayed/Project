@@ -2,15 +2,11 @@
 using ERP_API.Application.DTOs.Warehouse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ERP_API.API.Controllers
 {
-
-    [Authorize(Roles = "users")]
     [Route("api/[controller]")]
     [ApiController]
-
     public class WarehousesController : ControllerBase
     {
         private readonly IWarehouseService _warehouseService;
@@ -65,7 +61,5 @@ namespace ERP_API.API.Controllers
             var logs = await _warehouseService.GetTransferLogsAsync();
             return Ok(logs);
         }
-
-
     }
 }

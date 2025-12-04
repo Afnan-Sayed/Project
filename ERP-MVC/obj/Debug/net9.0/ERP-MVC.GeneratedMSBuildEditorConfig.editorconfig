@@ -70,12 +70,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/InventoryAdjustments/AddAdjustment.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5QWRqdXN0bWVudHNcQWRkQWRqdXN0bWVudC5jc2h0bWw=
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/InventoryAdjustment/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5QWRqdXN0bWVudFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/InventoryAdjustments/AdjustmentsList.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5QWRqdXN0bWVudHNcQWRqdXN0bWVudHNMaXN0LmNzaHRtbA==
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/InventoryAdjustment/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52ZW50b3J5QWRqdXN0bWVudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/PackageTypes/Create.cshtml]
@@ -94,12 +94,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxBZGRQYWNrYWdlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Product/AddProduct.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxBZGRQcm9kdWN0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Product/AddVariation.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxBZGRWYXJpYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Product/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Product/Details.cshtml]
@@ -198,8 +198,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxQcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Warehouse/Transactions.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FyZWhvdXNlXFRyYW5zYWN0aW9ucy5jc2h0bWw=
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Warehouse/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FyZWhvdXNlXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Warehouse/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FyZWhvdXNlXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Warehouse/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FyZWhvdXNlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Warehouse/Logs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FyZWhvdXNlXExvZ3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/Warehouse/Transfer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FyZWhvdXNlXFRyYW5zZmVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Courses/DEPI/.NET_Full_stack/Repo/Project/ERP-MVC/Views/_ViewImports.cshtml]

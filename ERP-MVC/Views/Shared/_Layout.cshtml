@@ -71,7 +71,7 @@
 
                         <li>
                             <a asp-controller="Product" asp-action="Create">
-                                Add New Item
+                                Add New Product
                             </a>
                         </li>
 
@@ -85,17 +85,37 @@
                                 Add New Package
                             </a>
                         </li>
+                        <li>
+                            <a asp-controller="Warehouse" asp-action="Index">Warehouses List</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Warehouse" asp-action="Create">Add Warehouse</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Warehouse" asp-action="Transfer">Transfer Stock</a>
+                        </li>
+                        <li>
+                            <a asp-controller="Warehouse" asp-action="Logs">Transfer Logs</a>
+                        </li>
                     </ul>
                 </li>
 
                 <!-- Inventory Adjustments -->
                 <li>
                     <a href="javascript:void();" class="has-arrow">
-                        <i class="zmdi zmdi-home"></i> <span>Warehouse Adjustments</span>
+                        <i class="zmdi zmdi-edit"></i> <span>Warehouse Adjustments</span>
                     </a>
                     <ul class="submenu-angle">
-                        <li><a href="adjustments-list.html">Adjustments List</a></li>
-                        <li><a href="add-adjustment.html">Add Adjustment</a></li>
+                        <li>
+                            <a asp-controller="InventoryAdjustment" asp-action="Index">
+                                Adjustments List
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="InventoryAdjustment" asp-action="Create">
+                                Add Adjustment
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
