@@ -1,4 +1,15 @@
 # Ignore Visual Studio files and folders
+# Build folders
+bin/
+obj/
+Debug/
+Release/
+
+# Visual Studio files
 .vs/
 *.user
 *.suo
+
+# Logs and temp
+*.log
+*.tmp
