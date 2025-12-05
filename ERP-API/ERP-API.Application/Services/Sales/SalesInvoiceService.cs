@@ -1,23 +1,39 @@
 ﻿using ERP_API.Application.DTOs.Sales.SalesInvoice;
 using ERP_API.Application.Interfaces.Sales;
+using ERP_API.DataAccess.Entities.Customers;
 using ERP_API.DataAccess.Entities.Inventory;
 using ERP_API.DataAccess.Entities.Sales;
 using ERP_API.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ERP_API.Application.Services.Sales
 {
     public class SalesInvoiceService : ISalesInvoiceService
     {
         private readonly IErpUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SalesInvoiceService(IErpUnitOfWork unitOfWork)
+        public SalesInvoiceService(IErpUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<SalesInvoiceResponseDto> CreateInvoiceAsync(CreateSalesInvoiceDto dto, Guid userId)
+        public async Task<SalesInvoiceResponseDto> CreateInvoiceAsync(CreateSalesInvoiceDto dto)
         {
+            var userIdString = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString))
+                throw new UnauthorizedAccessException("User not authenticated");
+
+            //conv ti int
+            var appUser = await _unitOfWork.UserManager.FindByIdAsync(userIdString);
+            if (appUser == null)
+                throw new UnauthorizedAccessException("User not found");
+
+            int userId = appUser.myId;
+
             // Validate customer exists
             var customer = await _unitOfWork.Customers.FindByIdAsync(dto.CustomerId);
             if (customer == null)
@@ -67,7 +83,7 @@ namespace ERP_API.Application.Services.Sales
             var netAmount = totalAmount - (dto.Discount ?? 0);
 
             // Get customer balance
-            var balanceBefore = customer.InitialBalance ?? 0;
+            var balanceBefore = customer.TotalBalance;
             var balanceAfter = balanceBefore + netAmount - (dto.AmountReceived ?? 0);
 
             // Generate invoice number
@@ -91,10 +107,22 @@ namespace ERP_API.Application.Services.Sales
 
             await _unitOfWork.SalesInvoices.CreateAsync(invoice);
 
-            // Update customer balance
-            customer.InitialBalance = (int)balanceAfter;
-            _unitOfWork.Customers.Update(customer);
+            var customerTransaction = new CustomerTransaction
+            {
+                CustomerId = dto.CustomerId,
+                TransactionType = "SalesInvoice",
+                TransactionDate = dto.InvoiceDate,
+                Amount = invoice.NetAmount,
+                Direction = "out", //العميل مدين لنا (out => دين له علينا)
+                Description = $"Sales Invoice {invoice.InvoiceNumber}"
+            };
 
+            await _unitOfWork.CustomerTransactions.CreateAsync(customerTransaction);
+
+            // Update customer balance
+            customer.TotalBalance = (int)balanceAfter;
+            _unitOfWork.Customers.Update(customer);
+           
             await _unitOfWork.SaveChangesAsync();
 
             return await GetInvoiceByIdAsync(invoice.Id)
@@ -122,7 +150,7 @@ namespace ERP_API.Application.Services.Sales
                 Id = invoice.Id,
                 InvoiceNumber = invoice.InvoiceNumber,
                 InvoiceDate = invoice.InvoiceDate,
-                CustomerName = invoice.Customer.Name,
+                CustomerName = invoice.Customer.CustomerName,
                 CustomerId = invoice.CustomerId,
                 TotalAmount = invoice.TotalAmount,
                 NetAmount = invoice.NetAmount,
@@ -155,14 +183,14 @@ namespace ERP_API.Application.Services.Sales
                     Id = i.Id,
                     InvoiceNumber = i.InvoiceNumber,
                     InvoiceDate = i.InvoiceDate,
-                    CustomerName = i.Customer.Name,
+                    CustomerName = i.Customer.CustomerName,
                     TotalAmount = i.TotalAmount,
                     NetAmount = i.NetAmount
                 })
                 .ToList();
         }
 
-        public async Task<List<SalesInvoiceListItemDto>> GetInvoicesByCustomerAsync(Guid customerId)
+        public async Task<List<SalesInvoiceListItemDto>> GetInvoicesByCustomerAsync(int customerId)
         {
             return _unitOfWork.SalesInvoices
                 .GetAllQueryable()
@@ -174,7 +202,7 @@ namespace ERP_API.Application.Services.Sales
                     Id = i.Id,
                     InvoiceNumber = i.InvoiceNumber,
                     InvoiceDate = i.InvoiceDate,
-                    CustomerName = i.Customer.Name,
+                    CustomerName = i.Customer.CustomerName,
                     TotalAmount = i.TotalAmount,
                     NetAmount = i.NetAmount
                 })

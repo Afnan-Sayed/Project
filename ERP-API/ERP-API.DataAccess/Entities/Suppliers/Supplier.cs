@@ -1,30 +1,40 @@
-﻿using ERP_API.DataAccess.Entities.Finance;
-using ERP_API.DataAccess.Entities.Purchasing;
-using ERP_API.DataAccess.Enums;
+﻿using ERP_API.DataAccess.Entities.Purchasing;
+using ERP_API.DataAccess.Entities.Sales;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ERP_API.DataAccess.Entities.Suppliers
 {
+    [Table("Suppliers")]
     public class Supplier
     {
-        public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public string? Email { get; set; }
-        public required string Phone { get; set; } = default!;
-        public string? Address { get; set; }
-        public string? TaxNumber { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-        public decimal? InitialBalance { get; set; }
-        public SupplierBalanceType? BalanceType { get; set; }
+        [Required]
+        [StringLength(200)]
+        public string SupplierName { get; set; } = string.Empty;
 
-        public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; } = new List<PurchaseInvoice>();
-        public ICollection<PurchaseReturn> PurchaseReturns { get; set; } = new List<PurchaseReturn>();
-        public ICollection<PaymentPermission> Payments { get; set; } = new List<PaymentPermission>();
-        public ICollection<ReceiptPermission> Receipts { get; set; } = new List<ReceiptPermission>();
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalBalance { get; set; }
+
+        [StringLength(500)]
+        public string? Description { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation properties
+        public virtual ICollection<SupplierTransaction> Transactions { get; set; } = new List<SupplierTransaction>();
+        public virtual ICollection<PurchaseInvoice> PurchaseInvoices { get; set; } = new List<PurchaseInvoice>();
+        public virtual ICollection<SalesInvoice> SalesInvoices { get; set; } = new List<SalesInvoice>();
 
     }
 }

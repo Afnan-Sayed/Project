@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.DTOs.Sales.SalesInvoice;
+﻿using ERP_API.Application.DTOs.Sales;
+using ERP_API.Application.DTOs.Sales.SalesInvoice;
 using ERP_API.Application.Interfaces.Sales;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,26 +7,26 @@ using System.Security.Claims;
 
 namespace ERP_API.API.Controllers.Sales
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SalesInvoicesController : ControllerBase
     {
-        private readonly ISalesInvoiceService _service;
+        private readonly ISalesInvoiceService _salesInvoiceService;
 
-        public SalesInvoicesController(ISalesInvoiceService service)
+        public SalesInvoicesController(ISalesInvoiceService salesInvoiceService)
         {
-            _service = service;
+            _salesInvoiceService = salesInvoiceService;
         }
 
 
-        //get all sales invoices
+        /// Get all sales invoices
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var invoices = await _service.GetAllInvoicesAsync();
+                var invoices = await _salesInvoiceService.GetAllInvoicesAsync();
                 return Ok(invoices);
             }
             catch (Exception ex)
@@ -35,13 +36,13 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //get sales invoice by ID
+        /// Get sales invoice by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var invoice = await _service.GetInvoiceByIdAsync(id);
+                var invoice = await _salesInvoiceService.GetInvoiceByIdAsync(id);
 
                 if (invoice == null)
                     return NotFound(new { message = $"Invoice with ID {id} not found" });
@@ -55,13 +56,13 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //get sales invoices by customer
-        [HttpGet("customer/{customerId}")]
-        public async Task<IActionResult> GetByCustomer(Guid customerId)
+        /// Get sales invoices by customer
+        [HttpGet("Customer/{customerId}")]
+        public async Task<IActionResult> GetByCustomer(int customerId)
         {
             try
             {
-                var invoices = await _service.GetInvoicesByCustomerAsync(customerId);
+                var invoices = await _salesInvoiceService.GetInvoicesByCustomerAsync(customerId);
                 return Ok(invoices);
             }
             catch (Exception ex)
@@ -71,24 +72,29 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //create a new sales invoice
+        /// Create new sales invoice
         [HttpPost]
+        [Authorize(Roles = "SystemManager,Accountant")]
         public async Task<IActionResult> Create([FromBody] CreateSalesInvoiceDto dto)
         {
             try
             {
-                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userIdClaim))
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                // Get user ID from JWT token
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
                     return Unauthorized(new { message = "User not authenticated" });
 
-                var userId = Guid.Parse(userIdClaim);
-
-                var invoice = await _service.CreateInvoiceAsync(dto, userId);
+                var invoice = await _salesInvoiceService.CreateInvoiceAsync(dto);
 
                 return CreatedAtAction(
                     nameof(GetById),
                     new { id = invoice.Id },
-                    invoice);
+                    invoice
+                );
             }
             catch (Exception ex)
             {
@@ -97,15 +103,16 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //delete sales invoice
+        /// Delete sales invoice
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SystemManager")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var result = await _service.DeleteInvoiceAsync(id);
+                var success = await _salesInvoiceService.DeleteInvoiceAsync(id);
 
-                if (!result)
+                if (!success)
                     return NotFound(new { message = $"Invoice with ID {id} not found" });
 
                 return Ok(new { message = "Invoice deleted successfully" });

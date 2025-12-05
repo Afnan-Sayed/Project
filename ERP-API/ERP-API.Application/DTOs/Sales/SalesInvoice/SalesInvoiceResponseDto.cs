@@ -12,7 +12,7 @@ namespace ERP_API.Application.DTOs.Sales.SalesInvoice
         public string InvoiceNumber { get; set; } = default!; //رقم فاتورة العميل تلقائي
         public DateTime InvoiceDate { get; set; }
         public string CustomerName { get; set; } = default!;
-        public Guid CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal Discount { get; set; }
         public decimal NetAmount { get; set; } 

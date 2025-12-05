@@ -1,4 +1,5 @@
-﻿using ERP_API.DataAccess.Identity;
+﻿
+using ERP_API.DataAccess.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,7 @@ namespace ERP_API.Application.DTOs.User
         public UserLoginResult()
         {
             Errors = new List<string>();
-            TokenResult = new TokenResultDto
-            {
-                Token = string.Empty,
-                RefreshToken = string.Empty
-            };
-            Claims = new List<AppClaim>();
-            Roles = Array.Empty<string>();
-            UserName = string.Empty;
+            TokenResult = new TokenResultDto();
         }
 
         public string UserName { get; set; }

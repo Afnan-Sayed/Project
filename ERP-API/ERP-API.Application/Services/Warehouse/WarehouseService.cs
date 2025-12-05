@@ -72,7 +72,7 @@ namespace ERP_API.Application.Services
                     Location = w.Location,
                     IsMainWarehouse = w.IsMainWarehouse
                 })
-                .ToListAsync(); 
+                .ToListAsync();
         }
 
         // 3. TRANSFER STOCK (Async)
@@ -125,7 +125,7 @@ namespace ERP_API.Application.Services
             };
 
             await _unitOfWork.StockTransferLogs.CreateAsync(transferLog);
-            await _unitOfWork.SaveChangesAsync(); 
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

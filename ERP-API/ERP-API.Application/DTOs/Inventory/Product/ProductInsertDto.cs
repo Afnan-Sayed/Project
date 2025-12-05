@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,12 @@ namespace ERP_API.Application.DTOs.Inventory.Product
     public class ProductInsertDto
     {
         // Product Info
-        public required string Name { get; set; }
+        public string Name { get; set; }
         public string? Description { get; set; }
         public int? CategoryId { get; set; }
 
         // Variation Info
-        public required string VariationName { get; set; }
+        public string VariationName { get; set; }
         public string? Flavor { get; set; }
         public string? Size { get; set; }
 

@@ -9,10 +9,10 @@ namespace ERP_API.Application.Interfaces.Purchasing
 {
     public interface IPurchaseReturnService
     {
-        Task<PurchaseReturnResponseDto> CreateReturnAsync(CreatePurchaseReturnDto dto, Guid userId);
+        Task<PurchaseReturnResponseDto> CreateReturnAsync(CreatePurchaseReturnDto dto);
         Task<PurchaseReturnResponseDto?> GetReturnByIdAsync(int id);
         Task<List<PurchaseReturnListItemDto>> GetAllReturnsAsync();
-        Task<List<PurchaseReturnListItemDto>> GetReturnsBySupplierAsync(Guid supplierId);
+        Task<List<PurchaseReturnListItemDto>> GetReturnsBySupplierAsync(int supplierId);
         Task<bool> DeleteReturnAsync(int id);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,10 @@ namespace ERP_API.Application.DTOs.User
 {
     public class TokenResultDto
     {
-        public required string Token { get; set; }
+        public string Token { get; set; }
         public DateTime TokenExpiryTime { get; set; }
 
-        public required string RefreshToken { get; set; }
+        public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
     }
 }

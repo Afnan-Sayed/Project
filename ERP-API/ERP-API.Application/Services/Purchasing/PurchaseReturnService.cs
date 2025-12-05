@@ -1,23 +1,38 @@
 ﻿using ERP_API.Application.DTOs.Purchasing.PurchaseReturn;
 using ERP_API.Application.Interfaces.Purchasing;
 using ERP_API.DataAccess.Entities.Purchasing;
+using ERP_API.DataAccess.Entities.Suppliers;
 using ERP_API.DataAccess.Entities.Warehouse;
 using ERP_API.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ERP_API.Application.Services.Purchasing
 {
     public class PurchaseReturnService : IPurchaseReturnService
     {
         private readonly IErpUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PurchaseReturnService(IErpUnitOfWork unitOfWork)
+        public PurchaseReturnService( IErpUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
-
-        public async Task<PurchaseReturnResponseDto> CreateReturnAsync(CreatePurchaseReturnDto dto, Guid userId)
+        public async Task<PurchaseReturnResponseDto> CreateReturnAsync(CreatePurchaseReturnDto dto)
         {
+            var userIdString = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString))
+                throw new UnauthorizedAccessException("User not authenticated");
+
+            //conv ti int
+            var appUser = await _unitOfWork.UserManager.FindByIdAsync(userIdString);
+            if (appUser == null)
+                throw new UnauthorizedAccessException("User not found");
+
+            int userId = appUser.myId;
+
             // Validate supplier exists
             var supplier = await _unitOfWork.Suppliers.FindByIdAsync(dto.SupplierId);
             if (supplier == null)
@@ -53,14 +68,28 @@ namespace ERP_API.Application.Services.Purchasing
             var purchaseReturn = new PurchaseReturn
             {
                 SupplierId = dto.SupplierId,
-                UserId = userId,
                 ReturnDate = dto.ReturnDate,
                 TotalAmount = totalAmount,
                 Reason = dto.Reason,
+                UserId = userId,
                 Items = returnItems
             };
 
             await _unitOfWork.PurchaseReturns.CreateAsync(purchaseReturn);
+
+
+            var supplierTransaction = new SupplierTransaction
+            {
+                SupplierId = dto.SupplierId,
+                TransactionType = "PurchaseReturn",
+                TransactionDate = dto.ReturnDate,
+                Amount = purchaseReturn.TotalAmount,
+                Direction = "out", //رجعنا بضاعة = خصم من ديوننا (out => دفعنا)
+                Description = $"Purchase Return #{purchaseReturn.Id}"
+            };
+
+            
+            await _unitOfWork.SupplierTransactions.CreateAsync(supplierTransaction);
             await _unitOfWork.SaveChangesAsync();
 
             return await GetReturnByIdAsync(purchaseReturn.Id)
@@ -84,7 +113,7 @@ namespace ERP_API.Application.Services.Purchasing
             {
                 Id = returnEntity.Id,
                 ReturnDate = returnEntity.ReturnDate,
-                SupplierName = returnEntity.Supplier.Name,
+                SupplierName = returnEntity.Supplier.SupplierName,
                 SupplierId = returnEntity.SupplierId,
                 TotalAmount = returnEntity.TotalAmount,
                 Reason = returnEntity.Reason,
@@ -94,7 +123,7 @@ namespace ERP_API.Application.Services.Purchasing
                     ProductCode = item.ProductPackage.Barcode,
                     ProductName = item.ProductPackage.ProductVariation.Product.Name,
                     Quantity = item.Quantity,
-                    UnitCount = 1, // Adjust based on your logic
+                    UnitCount = 1,
                     UnitPrice = item.Price,
                     Total = item.Total
                 }).ToList()
@@ -112,13 +141,13 @@ namespace ERP_API.Application.Services.Purchasing
             return returns.Select((r, index) => new PurchaseReturnListItemDto
             {
                 RowNumber = index + 1,
-                SupplierName = r.Supplier.Name,
+                SupplierName = r.Supplier.SupplierName,
                 ReturnDate = r.ReturnDate,
                 TotalAmount = r.TotalAmount
             }).ToList();
         }
 
-        public async Task<List<PurchaseReturnListItemDto>> GetReturnsBySupplierAsync(Guid supplierId)
+        public async Task<List<PurchaseReturnListItemDto>> GetReturnsBySupplierAsync(int supplierId)
         {
             var returns = _unitOfWork.PurchaseReturns
                 .GetAllQueryable()
@@ -130,7 +159,7 @@ namespace ERP_API.Application.Services.Purchasing
             return returns.Select((r, index) => new PurchaseReturnListItemDto
             {
                 RowNumber = index + 1,
-                SupplierName = r.Supplier.Name,
+                SupplierName = r.Supplier.SupplierName,
                 ReturnDate = r.ReturnDate,
                 TotalAmount = r.TotalAmount
             }).ToList();

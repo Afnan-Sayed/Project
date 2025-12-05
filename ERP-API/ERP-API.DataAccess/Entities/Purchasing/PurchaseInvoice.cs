@@ -21,16 +21,13 @@ namespace ERP_API.DataAccess.Entities.Purchasing
         public decimal BalanceAfter { get; set; }
 
         // Supplier Relationship
-        public Guid SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public Supplier Supplier { get; set; } = default!;
 
-        // User Relationship
-        public Guid UserId { get; set; }
-        public ERP_API.DataAccess.Entities.User.User User { get; set; } = default!;
+        public int UserId { get; set; } = default!;
 
         // Invoice Items
         public ICollection<PurchaseInvoiceItem> Items { get; set; } = new List<PurchaseInvoiceItem>();
-
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

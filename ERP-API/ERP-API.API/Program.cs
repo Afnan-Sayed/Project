@@ -27,8 +27,7 @@ namespace ERP_API
 
 
             builder.Services.AddHttpContextAccessor();
-
-
+            
 
             var JwtSection = builder.Configuration.GetSection(JwtOptions.sectionName);
 

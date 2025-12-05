@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +10,10 @@ namespace ERP_API.DataAccess.Entities.User
 {
     public class AppUser : IdentityUser
     {
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
+
+        public int myId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public DateTime? BirthDate { get; set; }
 
 

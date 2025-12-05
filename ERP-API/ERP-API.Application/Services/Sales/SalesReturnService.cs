@@ -1,23 +1,39 @@
 ﻿using ERP_API.Application.DTOs.Sales.SalesReturn;
 using ERP_API.Application.Interfaces.Sales;
+using ERP_API.DataAccess.Entities.Customers;
 using ERP_API.DataAccess.Entities.Sales;
 using ERP_API.DataAccess.Entities.Warehouse;
 using ERP_API.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ERP_API.Application.Services.Sales
 {
     public class SalesReturnService : ISalesReturnService
     {
         private readonly IErpUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SalesReturnService(IErpUnitOfWork unitOfWork)
+        public SalesReturnService(IErpUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<SalesReturnResponseDto> CreateReturnAsync(CreateSalesReturnDto dto, Guid userId)
+        public async Task<SalesReturnResponseDto> CreateReturnAsync(CreateSalesReturnDto dto)
         {
+            var userIdString = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString))
+                throw new UnauthorizedAccessException("User not authenticated");
+
+            //conv ti int
+            var appUser = await _unitOfWork.UserManager.FindByIdAsync(userIdString);
+            if (appUser == null)
+                throw new UnauthorizedAccessException("User not found");
+
+            int userId = appUser.myId;
+
             // Validate customer exists
             var customer = await _unitOfWork.Customers.FindByIdAsync(dto.CustomerId);
             if (customer == null)
@@ -53,14 +69,28 @@ namespace ERP_API.Application.Services.Sales
             var salesReturn = new SalesReturn
             {
                 CustomerId = dto.CustomerId,
-                UserId = userId,
                 ReturnDate = dto.ReturnDate,
                 TotalAmount = totalAmount,
                 Reason = dto.Reason,
+                UserId = userId,
                 Items = returnItems
             };
 
             await _unitOfWork.SalesReturns.CreateAsync(salesReturn);
+
+
+            var customerTransaction = new CustomerTransaction
+            {
+                CustomerId = dto.CustomerId,
+                TransactionType = "SalesReturn",
+                TransactionDate = dto.ReturnDate,
+                Amount = salesReturn.TotalAmount,
+                Direction = "in", //العميل رجع بضاعة = خصم من ديونه (in => استلمنا)
+                Description = $"Sales Return #{salesReturn.Id}"
+            };
+
+            await _unitOfWork.CustomerTransactions.CreateAsync(customerTransaction);
+
             await _unitOfWork.SaveChangesAsync();
 
             return await GetReturnByIdAsync(salesReturn.Id)
@@ -84,7 +114,7 @@ namespace ERP_API.Application.Services.Sales
             {
                 Id = returnEntity.Id,
                 ReturnDate = returnEntity.ReturnDate,
-                CustomerName = returnEntity.Customer.Name,
+                CustomerName = returnEntity.Customer.CustomerName,
                 CustomerId = returnEntity.CustomerId,
                 TotalAmount = returnEntity.TotalAmount,
                 Reason = returnEntity.Reason,
@@ -94,7 +124,7 @@ namespace ERP_API.Application.Services.Sales
                     ProductCode = item.ProductPackage.Barcode,
                     ProductName = item.ProductPackage.ProductVariation.Product.Name,
                     Quantity = item.Quantity,
-                    UnitCount = 1, // Adjust based on your logic
+                    UnitCount = 1, 
                     Price = item.Price,
                     Total = item.Total
                 }).ToList()
@@ -112,13 +142,13 @@ namespace ERP_API.Application.Services.Sales
             return returns.Select((r, index) => new SalesReturnListItemDto
             {
                 RowNumber = index + 1,
-                CustomerName = r.Customer.Name,
+                CustomerName = r.Customer.CustomerName,
                 ReturnDate = r.ReturnDate,
                 TotalAmount = r.TotalAmount
             }).ToList();
         }
 
-        public async Task<List<SalesReturnListItemDto>> GetReturnsByCustomerAsync(Guid customerId)
+        public async Task<List<SalesReturnListItemDto>> GetReturnsByCustomerAsync(int customerId)
         {
             var returns = _unitOfWork.SalesReturns
                 .GetAllQueryable()
@@ -130,7 +160,7 @@ namespace ERP_API.Application.Services.Sales
             return returns.Select((r, index) => new SalesReturnListItemDto
             {
                 RowNumber = index + 1,
-                CustomerName = r.Customer.Name,
+                CustomerName = r.Customer.CustomerName,
                 ReturnDate = r.ReturnDate,
                 TotalAmount = r.TotalAmount
             }).ToList();

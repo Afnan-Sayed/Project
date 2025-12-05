@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace ERP_API.Application.DTOs.Inventory.Product
     public class VariationInsertDto
     {
         // Variation Details
-        public required string VariationName { get; set; } // e.g., "Cheese"
+        public string VariationName { get; set; } // e.g., "Cheese"
         public string? Flavor { get; set; }
         public string? Size { get; set; }
 

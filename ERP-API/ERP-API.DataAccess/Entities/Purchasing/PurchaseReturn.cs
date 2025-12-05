@@ -16,12 +16,10 @@ namespace ERP_API.DataAccess.Entities.Purchasing
         public string? Reason { get; set; }
 
         // Supplier Relationship
-        public Guid SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public Supplier Supplier { get; set; } = default!;
 
-        // User Relationship
-        public Guid UserId { get; set; }
-        public ERP_API.DataAccess.Entities.User.User User { get; set; } = default!;
+        public int UserId { get; set; } = default!;
 
         // Return Items
         public ICollection<PurchaseReturnItem> Items { get; set; } = new List<PurchaseReturnItem>();

@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.Interfaces;
+﻿
+using ERP_API.Application.Interfaces;
 using ERP_API.Application.DTOs.Inventory.Product;
 using ERP_API.Application.DTOs.Inventory.Product.Responses;
 using ERP_API.DataAccess.Interfaces;
@@ -30,8 +31,7 @@ namespace ERP_API.Application.Services
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                CategoryId = dto.CategoryId,
-                Variations = new List<ProductVariation>() //required
+                CategoryId = dto.CategoryId
             };
 
             await productRepo.CreateAsync(product);
@@ -79,7 +79,7 @@ namespace ERP_API.Application.Services
             {
                 Id = product.Id,
                 Name = product.Name,
-                Description = product.Description ?? string.Empty, 
+                Description = product.Description,
                 CategoryName = "General",
                 Variations = new List<VariationResponseDto>
                 {
@@ -87,7 +87,7 @@ namespace ERP_API.Application.Services
                     {
                         Id = variation.Id,
                         Name = variation.Name,
-                        Flavor = variation.Flavor ?? string.Empty,
+                        Flavor = variation.Flavor,
                         SKU = variation.SKU,
                         Packages = new List<PackageResponseDto>
                         {
@@ -146,7 +146,7 @@ namespace ERP_API.Application.Services
             {
                 Id = variation.Id,
                 Name = variation.Name,
-                Flavor = variation.Flavor ?? string.Empty, // Ensure non-null assignment
+                Flavor = variation.Flavor,
                 SKU = variation.SKU,
                 Packages = new List<PackageResponseDto>
                 {
@@ -221,26 +221,35 @@ namespace ERP_API.Application.Services
                 {
                     Id = p.Id,
                     Name = p.Name,
-                    Description = p.Description ?? string.Empty,
+                    Description = p.Description,
                     CategoryName = p.Category != null ? p.Category.Name : "Uncategorized",
+
                     Variations = p.Variations.Select(v => new VariationResponseDto
                     {
                         Id = v.Id,
                         Name = v.Name,
-                        Flavor = v.Flavor ?? string.Empty,
+                        Flavor = v.Flavor,
                         SKU = v.SKU,
+
                         Packages = v.ProductPackages.Select(pkg => new PackageResponseDto
                         {
                             Id = pkg.Id,
                             PackageTypeName = pkg.PackageType.Name,
+                            Barcode = pkg.Barcode,
+
                             QinP = pkg.QinP,
                             SalesPrice = pkg.SalesPrice,
-                            Barcode = pkg.Barcode
+
+
+                            PurchasePrice = pkg.PurchasePrice,
+
+
+                            CurrentStock = pkg.WarehouseStocks.Sum(ws => ws.Quantity)
                         }).ToList()
                     }).ToList()
                 });
 
-            return await query.FirstOrDefaultAsync(); // ✅ Async Execution
+            return await query.FirstOrDefaultAsync();
         }
 
         // ==========================================================

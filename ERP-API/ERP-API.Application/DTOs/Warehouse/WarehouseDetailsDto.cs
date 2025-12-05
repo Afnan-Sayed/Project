@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,11 @@ namespace ERP_API.Application.DTOs.Warehouse
     {
         // Header Info
         public int Id { get; set; }
-        public required string Name { get; set; }
+        public string Name { get; set; }
         public string? Location { get; set; }
         public bool IsMainWarehouse { get; set; }
 
         // The Inventory Table
-        public required IEnumerable<WarehouseStockDto> StockItems { get; set; }
+        public IEnumerable<WarehouseStockDto> StockItems { get; set; }
     }
 }

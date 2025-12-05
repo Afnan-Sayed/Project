@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.DTOs.Purchasing.PurchaseInvoice;
+﻿using ERP_API.Application.DTOs.Purchasing;
+using ERP_API.Application.DTOs.Purchasing.PurchaseInvoice;
 using ERP_API.Application.Interfaces.Purchasing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,22 +9,23 @@ namespace ERP_API.API.Controllers.Purchasing
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PurchaseInvoicesController : ControllerBase
     {
-        private readonly IPurchaseInvoiceService _service;
-        public PurchaseInvoicesController(IPurchaseInvoiceService service)
+        private readonly IPurchaseInvoiceService _purchaseInvoiceService;
+
+        public PurchaseInvoicesController(IPurchaseInvoiceService purchaseInvoiceService)
         {
-            _service = service;
+            _purchaseInvoiceService = purchaseInvoiceService;
         }
 
-        
-        ///get all purchase invoices
+        /// Get all purchase invoices
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var invoices = await _service.GetAllInvoicesAsync();
+                var invoices = await _purchaseInvoiceService.GetAllInvoicesAsync();
                 return Ok(invoices);
             }
             catch (Exception ex)
@@ -32,14 +34,14 @@ namespace ERP_API.API.Controllers.Purchasing
             }
         }
 
-       
-        //get purchase invoice by ID
+
+        /// Get purchase invoice by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var invoice = await _service.GetInvoiceByIdAsync(id);
+                var invoice = await _purchaseInvoiceService.GetInvoiceByIdAsync(id);
 
                 if (invoice == null)
                     return NotFound(new { message = $"Invoice with ID {id} not found" });
@@ -52,14 +54,14 @@ namespace ERP_API.API.Controllers.Purchasing
             }
         }
 
-
-        //get purchase invoices by suppliers
-        [HttpGet("supplier/{supplierId}")]
-        public async Task<IActionResult> GetBySupplier(Guid supplierId)
+  
+        /// Get purchase invoices by supplier
+        [HttpGet("Supplier/{supplierId}")]
+        public async Task<IActionResult> GetBySupplier(int supplierId)
         {
             try
             {
-                var invoices = await _service.GetInvoicesBySupplierAsync(supplierId);
+                var invoices = await _purchaseInvoiceService.GetInvoicesBySupplierAsync(supplierId);
                 return Ok(invoices);
             }
             catch (Exception ex)
@@ -68,25 +70,29 @@ namespace ERP_API.API.Controllers.Purchasing
             }
         }
 
-        //create a new purchase invoice
+        /// Create new purchase invoice
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreatePurchaseInvoiceDto dto)
         {
             try
             {
-                // Get user ID from claims
-                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userIdClaim))
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                // Get user ID from JWT token
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
                     return Unauthorized(new { message = "User not authenticated" });
 
-                var userId = Guid.Parse(userIdClaim);
-
-                var invoice = await _service.CreateInvoiceAsync(dto, userId);
+                var invoice = await _purchaseInvoiceService.CreateInvoiceAsync(dto);
 
                 return CreatedAtAction(
                     nameof(GetById),
                     new { id = invoice.Id },
-                    invoice);
+                    invoice
+                );
             }
             catch (Exception ex)
             {
@@ -95,15 +101,16 @@ namespace ERP_API.API.Controllers.Purchasing
         }
 
 
-        ///delete purchase invoice
+        /// Delete purchase invoice
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var result = await _service.DeleteInvoiceAsync(id);
+                var success = await _purchaseInvoiceService.DeleteInvoiceAsync(id);
 
-                if (!result)
+                if (!success)
                     return NotFound(new { message = $"Invoice with ID {id} not found" });
 
                 return Ok(new { message = "Invoice deleted successfully" });

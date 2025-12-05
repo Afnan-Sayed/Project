@@ -8,7 +8,7 @@ namespace ERP_API.Application.DTOs.Sales.SalesReturn
 {
     public class CreateSalesReturnDto
     {
-        public Guid CustomerId { get; set; } 
+        public int CustomerId { get; set; } 
         public DateTime ReturnDate { get; set; } 
         public string? Reason { get; set; }
         public List<SalesReturnItemDto> Items { get; set; } = new();

@@ -11,7 +11,7 @@ namespace ERP_API.Application.DTOs.Purchasing.PurchaseReturn
         public int Id { get; set; }
         public DateTime ReturnDate { get; set; }
         public string SupplierName { get; set; } = default!;
-        public Guid SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public decimal TotalAmount { get; set; } //المبلغ
         public string? Reason { get; set; }
         public List<PurchaseReturnItemResponseDto> Items { get; set; } = new();

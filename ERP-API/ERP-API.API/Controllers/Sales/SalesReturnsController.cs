@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.DTOs.Sales.SalesReturn;
+﻿using ERP_API.Application.DTOs.Sales;
+using ERP_API.Application.DTOs.Sales.SalesReturn;
 using ERP_API.Application.Interfaces.Sales;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,25 +7,26 @@ using System.Security.Claims;
 
 namespace ERP_API.API.Controllers.Sales
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SalesReturnsController : ControllerBase
     {
-        private readonly ISalesReturnService _service;
+        private readonly ISalesReturnService _salesReturnService;
 
-        public SalesReturnsController(ISalesReturnService service)
+        public SalesReturnsController(ISalesReturnService salesReturnService)
         {
-            _service = service;
+            _salesReturnService = salesReturnService;
         }
 
-        //get all sales returns
+
+        /// Get all sales returns
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var returns = await _service.GetAllReturnsAsync();
+                var returns = await _salesReturnService.GetAllReturnsAsync();
                 return Ok(returns);
             }
             catch (Exception ex)
@@ -34,16 +36,16 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //get sales return by ID
+        /// Get sales return by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var returnEntity = await _service.GetReturnByIdAsync(id);
+                var returnEntity = await _salesReturnService.GetReturnByIdAsync(id);
 
                 if (returnEntity == null)
-                    return NotFound(new { message = $"Return with ID {id} not found" });
+                    return NotFound(new { message = $"Sales return with ID {id} not found" });
 
                 return Ok(returnEntity);
             }
@@ -54,13 +56,13 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //get sales returns by customer
-        [HttpGet("customer/{customerId}")]
-        public async Task<IActionResult> GetByCustomer(Guid customerId)
+        /// Get sales returns by customer
+        [HttpGet("Customer/{customerId}")]
+        public async Task<IActionResult> GetByCustomer(int customerId)
         {
             try
             {
-                var returns = await _service.GetReturnsByCustomerAsync(customerId);
+                var returns = await _salesReturnService.GetReturnsByCustomerAsync(customerId);
                 return Ok(returns);
             }
             catch (Exception ex)
@@ -70,24 +72,29 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //create a new sales return
+        /// Create new sales return (without invoice)
         [HttpPost]
+        [Authorize(Roles = "SystemManager,Accountant")]
         public async Task<IActionResult> Create([FromBody] CreateSalesReturnDto dto)
         {
             try
             {
-                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userIdClaim))
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                // Get user ID from JWT token
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
                     return Unauthorized(new { message = "User not authenticated" });
 
-                var userId = Guid.Parse(userIdClaim);
-
-                var returnEntity = await _service.CreateReturnAsync(dto, userId);
+                var returnEntity = await _salesReturnService.CreateReturnAsync(dto);
 
                 return CreatedAtAction(
                     nameof(GetById),
                     new { id = returnEntity.Id },
-                    returnEntity);
+                    returnEntity
+                );
             }
             catch (Exception ex)
             {
@@ -96,18 +103,20 @@ namespace ERP_API.API.Controllers.Sales
         }
 
 
-        //delete sales return
+
+        /// Delete sales return
         [HttpDelete("{id}")]
+        [Authorize(Roles = "SystemManager")]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var result = await _service.DeleteReturnAsync(id);
+                var success = await _salesReturnService.DeleteReturnAsync(id);
 
-                if (!result)
-                    return NotFound(new { message = $"Return with ID {id} not found" });
+                if (!success)
+                    return NotFound(new { message = $"Sales return with ID {id} not found" });
 
-                return Ok(new { message = "Return deleted successfully" });
+                return Ok(new { message = "Sales return deleted successfully" });
             }
             catch (Exception ex)
             {

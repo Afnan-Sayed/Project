@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.DTOs.Inventory.Product;
+﻿
+using ERP_API.Application.DTOs.Inventory.Product;
 using ERP_API.Application.DTOs.Inventory.Product.Responses;
 using ERP_API.DataAccess.Entities.Inventory;
 using System;

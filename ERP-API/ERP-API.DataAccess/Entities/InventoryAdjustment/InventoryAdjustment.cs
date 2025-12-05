@@ -1,10 +1,10 @@
 ﻿using ERP_API.DataAccess.Entities.Inventory;
+using WarehouseNS = ERP_API.DataAccess.Entities.Warehouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ERP_API.DataAccess.Entities.User;
 
 namespace ERP_API.DataAccess.Entities.InventoryAdjustment
 {
@@ -15,7 +15,7 @@ namespace ERP_API.DataAccess.Entities.InventoryAdjustment
 
         // Where did it happen?
         public int WarehouseId { get; set; }
-        public Warehouse.Warehouse Warehouse { get; set; }
+        public WarehouseNS.Warehouse Warehouse { get; set; }
 
         // What item?
         public int ProductPackageId { get; set; }
@@ -31,8 +31,6 @@ namespace ERP_API.DataAccess.Entities.InventoryAdjustment
         public string Reason { get; set; } // e.g. "Stolen", "Expired", "Found", "Gift"
 
         // User (Nullable for now)
-        public Guid? UserId { get; set; }
-        public ERP_API.DataAccess.Entities.User.User User { get; set; } = default!;
-
+        public int? UserId { get; set; }
     }
 }

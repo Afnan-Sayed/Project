@@ -7,6 +7,9 @@ using ERP_API.DataAccess.Entities.Sales;
 using ERP_API.DataAccess.Entities.Suppliers;
 using ERP_API.DataAccess.Entities.User;
 using ERP_API.DataAccess.Entities.Warehouse;
+using ERP_API.DataAccess.Interfaces.Customers;
+using ERP_API.DataAccess.Interfaces.Suppliers;
+
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -19,56 +22,56 @@ namespace ERP_API.DataAccess.Interfaces
     public interface IErpUnitOfWork
     {
 
-        //Product Management
+        //product, package, warehouse
         IBaseRepository<Product, int> Products { get; }
         IBaseRepository<ProductVariation, int> ProductVariations { get; }
         IBaseRepository<ProductPackage, int> ProductPackages { get; }
-        //IBaseRepository<Category, int> Categories { get; }
+
         IBaseRepository<PackageType, int> PackageTypes { get; }
 
-
-        //Warehouse Management
         IBaseRepository<Warehouse, int> Warehouses { get; }
         IBaseRepository<WarehouseStock, int> WarehouseStocks { get; }
+
         IBaseRepository<StockTransferLog, int> StockTransferLogs { get; }
 
-        //Inventory Adjustments
         IBaseRepository<InventoryAdjustment, int> InventoryAdjustments { get; }
- 
 
-        //User Management
-        IBaseRepository<User, Guid> Users { get; }
 
-        //Suppliers & Customers
-        IBaseRepository<Supplier, Guid> Suppliers { get; }
-        IBaseRepository<Customer, Guid> Customers { get; }
 
-       
+        //app user
+        UserManager<AppUser> UserManager { get; }
 
-        // Purchasing
+
+        //finance
+        IBaseRepository<MainSafe, int> MainSafes { get; }
+        IBaseRepository<MainSafeLedgerEntry, int> MainSafeLedgerEntry { get; }
+        IBaseRepository<Expense, int> Expenses { get; }
+        IBaseRepository<ProfitSource, int> ProfitSources { get; }
+
+
+        //customers and suppliers
+        IBaseRepository<CustomerTransaction, int> CustomerTransactions { get; }
+        IBaseRepository<SupplierTransaction, int> SupplierTransactions { get; }
+        ICustomerRepository Customers { get; }
+        ISupplierRepository Suppliers { get; }
+
+
+
+
+        // Purchasing and sales
         IBaseRepository<PurchaseInvoice, int> PurchaseInvoices { get; }
         IBaseRepository<PurchaseInvoiceItem, int> PurchaseInvoiceItems { get; }
         IBaseRepository<PurchaseReturn, int> PurchaseReturns { get; }
         IBaseRepository<PurchaseReturnItem, int> PurchaseReturnItems { get; }
 
-        //Sales
+     
         IBaseRepository<SalesInvoice, int> SalesInvoices { get; }
         IBaseRepository<SalesInvoiceItem, int> SalesInvoiceItems { get; }
         IBaseRepository<SalesReturn, int> SalesReturns { get; }
         IBaseRepository<SalesReturnItem, int> SalesReturnItems { get; }
 
-        //Finance
-        IBaseRepository<Safe, int> Safes { get; }
-        IBaseRepository<PaymentPermission, int> PaymentPermissions { get; }
-        IBaseRepository<ReceiptPermission, int> ReceiptPermissions { get; }
-        IBaseRepository<ExpenseType, int> ExpenseTypes { get; }
-        IBaseRepository<RevenueSource, int> RevenueSources { get; }
-
-
-        UserManager<AppUser> UserManager { get; }
         public ITokenManager TokenManager { get; }
 
-        void SaveChanges();
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        Task SaveChangesAsync();
     }
 }

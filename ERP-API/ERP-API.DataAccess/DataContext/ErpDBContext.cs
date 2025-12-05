@@ -24,20 +24,27 @@ namespace ERP_API.DataAccess.DataContext
         public ErpDBContext(
            DbContextOptions<ErpDBContext> options) : base(options) { }
         
-        //User Management
-        public DbSet<User> Users { get; set; }
-
-
-
+       
         //App User
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<AppUserPermission> AppUserPermissions { get; set; }
 
-        
-        
+
+        //Finance
+        public DbSet<MainSafe> MainSafes { get; set; }
+        public DbSet<MainSafeLedgerEntry> MainSafeLedgerEntries { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+        public DbSet<ProfitSource> ProfitSources { get; set; }
+
+
         //Suppliers & Customers
-        public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CustomerTransaction> CustomerTransactions { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<SupplierTransaction> SupplierTransactions { get; set; }
+
+
+
 
 
         //Product Management
@@ -74,116 +81,10 @@ namespace ERP_API.DataAccess.DataContext
 
 
 
-        //Finance
-        public DbSet<Safe> Safes { get; set; }
-        public DbSet<PaymentPermission> PaymentPermissions { get; set; }
-        public DbSet<ReceiptPermission> ReceiptPermissions { get; set; }
-        public DbSet<ExpenseType> ExpenseTypes { get; set; }
-        public DbSet<RevenueSource> RevenueSources { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // User Configuration
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Email).IsRequired().HasMaxLength(256);
-                entity.HasIndex(e => e.Email).IsUnique();
-                entity.Property(e => e.FullName).IsRequired().HasMaxLength(256);
-            });
-
-
-            //Supplier Configuration
-            modelBuilder.Entity<Supplier>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
-                entity.Property(e => e.Phone).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Email).HasMaxLength(256);
-            });
-
-            //Customer Configuration
-            modelBuilder.Entity<Customer>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
-                entity.Property(e => e.Phone).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Email).HasMaxLength(256);
-            });
-
-
-
-            //Category Configuration
-            modelBuilder.Entity<Category>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
-            });
-
-            //PackageType Configuration
-            modelBuilder.Entity<PackageType>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
-                entity.Property(e => e.UnitOfMeasurement).IsRequired().HasMaxLength(50);
-            });
-
-            //Warehouse Configuration
-            modelBuilder.Entity<Warehouse>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
-            });
-
-
-
-            //Product Configuration
-            modelBuilder.Entity<Product>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
-                entity.HasOne(e => e.Category)
-                    .WithMany(c => c.Products)
-                    .HasForeignKey(e => e.CategoryId)
-                    .OnDelete(DeleteBehavior.SetNull);
-            });
-
-
-            //ProductVariation Configuration
-            modelBuilder.Entity<ProductVariation>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.SKU).IsRequired().HasMaxLength(50);
-                entity.HasIndex(e => e.SKU).IsUnique();
-                entity.HasOne(e => e.Product)
-                    .WithMany(p => p.Variations)
-                    .HasForeignKey(e => e.ProductId)
-                    .OnDelete(DeleteBehavior.Cascade);
-            });
-
-            //ProductPackage Configuration
-            modelBuilder.Entity<ProductPackage>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Barcode).IsRequired().HasMaxLength(100);
-                entity.HasIndex(e => e.Barcode).IsUnique();
-                entity.Property(e => e.PurchasePrice).HasPrecision(18, 2);
-                entity.Property(e => e.SalesPrice).HasPrecision(18, 2);
-                entity.Property(e => e.QinP).HasPrecision(18, 4);
-            });
-
-      
-            //WarehouseStock Configuration
-            modelBuilder.Entity<WarehouseStock>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Quantity).HasPrecision(18, 4);
-                entity.Property(e => e.MinStockLevel).HasPrecision(18,4);
-                entity.HasIndex(e => new { e.WarehouseId, e.ProductPackageId }).IsUnique();
-            });
-
 
             //PurchaseInvoice Configuration
             modelBuilder.Entity<PurchaseInvoice>(entity =>
@@ -197,10 +98,7 @@ namespace ERP_API.DataAccess.DataContext
                     .WithMany(s => s.PurchaseInvoices)
                     .HasForeignKey(e => e.SupplierId)
                     .OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.PurchaseInvoices)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                entity.Property(e => e.UserId).IsRequired();
             });
 
 
@@ -216,65 +114,34 @@ namespace ERP_API.DataAccess.DataContext
                     .WithMany(c => c.SalesInvoices)
                     .HasForeignKey(e => e.CustomerId)
                     .OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(e => e.User)
-                    .WithMany(u => u.SalesInvoices)
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
-
-            //Safe Configuration
-            modelBuilder.Entity<Safe>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(256);
-                entity.Property(e => e.OpeningBalance).HasPrecision(18, 2);
-                entity.Property(e => e.CurrentBalance).HasPrecision(18, 2);
+                entity.Property(e => e.UserId).IsRequired();
             });
 
 
-            //PaymentPermission Configuration
-            modelBuilder.Entity<PaymentPermission>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Amount).HasPrecision(18, 2);
-                entity.HasOne(e => e.Safe)
-                    .WithMany(s => s.Payments)
-                    .HasForeignKey(e => e.SafeId)
-                    .OnDelete(DeleteBehavior.Restrict);
-                entity.HasOne(e => e.Supplier)
-                    .WithMany(s => s.Payments)
-                    .HasForeignKey(e => e.SupplierId)
-                    .OnDelete(DeleteBehavior.SetNull);
-                entity.HasOne(e => e.Customer)
-                    .WithMany(c => c.Payments)
-                    .HasForeignKey(e => e.CustomerId)
-                    .OnDelete(DeleteBehavior.SetNull);
-            });
 
-            //ReceiptPermission Configuration
-            modelBuilder.Entity<ReceiptPermission>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Amount).HasPrecision(18, 2);
-                entity.HasOne(e => e.Safe)
-                    .WithMany(s => s.Receipts)
-                    .HasForeignKey(e => e.SafeId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
+    //////////////////////////////////////////////////////////////////////////
+            // ProductPackage Prices
+            modelBuilder.Entity<ProductPackage>()
+                .Property(p => p.PurchasePrice)
+                .HasColumnType("decimal(18,2)");
 
-            //InventoryAdjustment Configuration
-            modelBuilder.Entity<InventoryAdjustment>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.OldQuantity).HasPrecision(18,4);
-                entity.Property(e => e.NewQuantity).HasPrecision(18,4);
-                entity.Property(e => e.Difference).HasPrecision(18,4);
-                entity.HasOne(e => e.User)
-                    .WithMany()
-                    .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Restrict);
-            });
+            modelBuilder.Entity<ProductPackage>()
+                .Property(p => p.SalesPrice)
+                .HasColumnType("decimal(18,2)");
 
+
+            modelBuilder.Entity<ProductPackage>()
+                .Property(p => p.QinP)
+                .HasColumnType("decimal(18,4)");
+
+            // WarehouseStock Quantities
+            modelBuilder.Entity<WarehouseStock>()
+                .Property(w => w.Quantity)
+                .HasColumnType("decimal(18,4)");
+
+            modelBuilder.Entity<WarehouseStock>()
+                .Property(w => w.MinStockLevel)
+                .HasColumnType("decimal(18,4)");
 
             modelBuilder.Entity<StockTransferLog>()
                 .Property(l => l.Quantity)
@@ -292,9 +159,10 @@ namespace ERP_API.DataAccess.DataContext
                 .HasForeignKey(l => l.ToWarehouseId)
                 .OnDelete(DeleteBehavior.Restrict); // <--- Crucial Change
 
-            
-
-         }
+            modelBuilder.Entity<InventoryAdjustment>().Property(a => a.OldQuantity).HasColumnType("decimal(18,4)");
+            modelBuilder.Entity<InventoryAdjustment>().Property(a => a.NewQuantity).HasColumnType("decimal(18,4)");
+            modelBuilder.Entity<InventoryAdjustment>().Property(a => a.Difference).HasColumnType("decimal(18,4)");
+        }
     }
 
 

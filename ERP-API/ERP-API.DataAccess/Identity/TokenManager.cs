@@ -69,8 +69,7 @@ namespace ERP_API.DataAccess.Identity
             return new TokenResult
             {
                 Token = GenerateRefreshToken(),
-                TokenExpiryTime = DateTime.Now.AddHours(_jwtOptions.RefreshTokenExpiryHours),
-                Claims = new List<AppClaim>() //required
+                TokenExpiryTime = DateTime.Now.AddHours(_jwtOptions.RefreshTokenExpiryHours)
             };
         }
         public async Task<TokenResult> RefreshToken(string accessToken, string refreshToken)

@@ -12,7 +12,7 @@ namespace ERP_API.Application.DTOs.Purchasing.PurchaseInvoice
         public string InvoiceNumber { get; set; } = default!; //رقم فاتورة المورد تلقائي
         public DateTime InvoiceDate { get; set; } //تاريخ الفاتورة
         public string SupplierName { get; set; } = default!; //المورد
-        public Guid SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public decimal TotalAmount { get; set; } //المبلغ الاجمالي
         public decimal Discount { get; set; } //الخصم
         public decimal NetAmount { get; set; } //المبلغ الصافي

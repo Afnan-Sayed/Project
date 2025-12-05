@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.DTOs.Purchasing.PurchaseReturn;
+﻿using ERP_API.Application.DTOs.Purchasing;
+using ERP_API.Application.DTOs.Purchasing.PurchaseReturn;
 using ERP_API.Application.Interfaces.Purchasing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,26 +7,26 @@ using System.Security.Claims;
 
 namespace ERP_API.API.Controllers.Purchasing
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PurchaseReturnsController : ControllerBase
     {
-        private readonly IPurchaseReturnService _service;
+        private readonly IPurchaseReturnService _purchaseReturnService;
 
-        public PurchaseReturnsController(IPurchaseReturnService service)
+        public PurchaseReturnsController(IPurchaseReturnService purchaseReturnService)
         {
-            _service = service;
+            _purchaseReturnService = purchaseReturnService;
         }
 
-        
-        //get all purchase returns
+
+        /// Get all purchase returns
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var returns = await _service.GetAllReturnsAsync();
+                var returns = await _purchaseReturnService.GetAllReturnsAsync();
                 return Ok(returns);
             }
             catch (Exception ex)
@@ -34,16 +35,17 @@ namespace ERP_API.API.Controllers.Purchasing
             }
         }
 
-        //get purchase return by ID
+   
+        /// Get purchase return by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                var returnEntity = await _service.GetReturnByIdAsync(id);
+                var returnEntity = await _purchaseReturnService.GetReturnByIdAsync(id);
 
                 if (returnEntity == null)
-                    return NotFound(new { message = $"Return with ID {id} not found" });
+                    return NotFound(new { message = $"Purchase return with ID {id} not found" });
 
                 return Ok(returnEntity);
             }
@@ -53,13 +55,14 @@ namespace ERP_API.API.Controllers.Purchasing
             }
         }
 
-        //get purchase returns by supplier
-        [HttpGet("supplier/{supplierId}")]
-        public async Task<IActionResult> GetBySupplier(Guid supplierId)
+
+        /// Get purchase returns by supplier
+        [HttpGet("Supplier/{supplierId}")]
+        public async Task<IActionResult> GetBySupplier(int supplierId)
         {
             try
             {
-                var returns = await _service.GetReturnsBySupplierAsync(supplierId);
+                var returns = await _purchaseReturnService.GetReturnsBySupplierAsync(supplierId);
                 return Ok(returns);
             }
             catch (Exception ex)
@@ -69,24 +72,29 @@ namespace ERP_API.API.Controllers.Purchasing
         }
 
 
-        //create a new purchase return
+        /// Create new purchase return (without invoice)
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create([FromBody] CreatePurchaseReturnDto dto)
         {
             try
             {
-                var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (string.IsNullOrEmpty(userIdClaim))
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                // Get user ID from JWT token
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
                     return Unauthorized(new { message = "User not authenticated" });
 
-                var userId = Guid.Parse(userIdClaim);
-
-                var returnEntity = await _service.CreateReturnAsync(dto, userId);
+                var returnEntity = await _purchaseReturnService.CreateReturnAsync(dto);
 
                 return CreatedAtAction(
                     nameof(GetById),
                     new { id = returnEntity.Id },
-                    returnEntity);
+                    returnEntity
+                );
             }
             catch (Exception ex)
             {
@@ -95,18 +103,19 @@ namespace ERP_API.API.Controllers.Purchasing
         }
 
 
-        //ddelete purchase return
+        /// Delete purchase return
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var result = await _service.DeleteReturnAsync(id);
+                var success = await _purchaseReturnService.DeleteReturnAsync(id);
 
-                if (!result)
-                    return NotFound(new { message = $"Return with ID {id} not found" });
+                if (!success)
+                    return NotFound(new { message = $"Purchase return with ID {id} not found" });
 
-                return Ok(new { message = "Return deleted successfully" });
+                return Ok(new { message = "Purchase return deleted successfully" });
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.DTOs.User;
+﻿
+using ERP_API.Application.DTOs.User;
 using ERP_API.Application.Interfaces.User;
 using ERP_API.DataAccess.Entities.User;
 using ERP_API.DataAccess.Interfaces;
@@ -58,6 +59,8 @@ namespace ERP_API.Application.Services.User
 
         public async Task<UserLoginResult> LoginAsync(UserLoginDto user)
         {
+
+
             var identityUser = await _uow.UserManager.FindByNameAsync(user.UserName);
             var loginResult = new UserLoginResult();
             if (identityUser == null)
@@ -81,7 +84,7 @@ namespace ERP_API.Application.Services.User
 
             await _uow.UserManager.UpdateAsync(identityUser);
 
-            loginResult.UserName = identityUser.UserName ?? string.Empty;
+            loginResult.UserName = identityUser.UserName;
             loginResult.Claims = token.Claims;
 
             loginResult.TokenResult.Token = token.Token;

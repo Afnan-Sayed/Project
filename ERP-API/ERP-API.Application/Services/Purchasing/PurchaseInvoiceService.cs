@@ -2,23 +2,43 @@
 using ERP_API.Application.Interfaces.Purchasing;
 using ERP_API.DataAccess.Entities.Inventory;
 using ERP_API.DataAccess.Entities.Purchasing;
+using ERP_API.DataAccess.Entities.Suppliers;
+using ERP_API.DataAccess.Entities.User;
 using ERP_API.DataAccess.Entities.Warehouse;
 using ERP_API.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ERP_API.Application.Services.Purchasing
 {
     public class PurchaseInvoiceService : IPurchaseInvoiceService
     {
         private readonly IErpUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PurchaseInvoiceService(IErpUnitOfWork unitOfWork)
+
+        public PurchaseInvoiceService(
+        IErpUnitOfWork unitOfWork,
+        IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<PurchaseInvoiceResponseDto> CreateInvoiceAsync(CreatePurchaseInvoiceDto dto, Guid userId)
+        public async Task<PurchaseInvoiceResponseDto> CreateInvoiceAsync(CreatePurchaseInvoiceDto dto)
         {
+            var userIdString = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString))
+                throw new UnauthorizedAccessException("User not authenticated");
+
+            //conv ti int
+            var appUser = await _unitOfWork.UserManager.FindByIdAsync(userIdString);
+            if (appUser == null)
+                throw new UnauthorizedAccessException("User not found");
+
+            int userId = appUser.myId;
+
             // Validate supplier exists
             var supplier = await _unitOfWork.Suppliers.FindByIdAsync(dto.SupplierId);
             if (supplier == null)
@@ -56,7 +76,7 @@ namespace ERP_API.Application.Services.Purchasing
             var netAmount = totalAmount - (dto.Discount ?? 0);
 
             // Get supplier balance
-            var balanceBefore = supplier.InitialBalance ?? 0;
+            var balanceBefore = supplier.TotalBalance;
             var balanceAfter = balanceBefore + netAmount - (dto.PaymentOrderAmount ?? 0);
 
             // Generate invoice number
@@ -80,13 +100,26 @@ namespace ERP_API.Application.Services.Purchasing
 
             await _unitOfWork.PurchaseInvoices.CreateAsync(invoice);
 
-            // Update supplier balance
-            supplier.InitialBalance = balanceAfter;
+            //txn supp
+            var supplierTransaction = new SupplierTransaction
+            {
+                SupplierId = dto.SupplierId,
+                TransactionType = "PurchaseInvoice",
+                TransactionDate = dto.InvoiceDate,
+                Amount = invoice.NetAmount,
+                Direction = "in", //احنا مديونين للمورد (in => دين علينا)
+                Description = $"Purchase Invoice {invoice.InvoiceNumber}"
+            };
+
+            await _unitOfWork.SupplierTransactions.CreateAsync(supplierTransaction);
+
+            //Update supplier balance
+            supplier.TotalBalance = balanceAfter;
             _unitOfWork.Suppliers.Update(supplier);
-
+ 
             await _unitOfWork.SaveChangesAsync();
-
             return await GetInvoiceByIdAsync(invoice.Id) ?? throw new Exception("Failed to retrieve created invoice");
+            
         }
 
         public async Task<PurchaseInvoiceResponseDto?> GetInvoiceByIdAsync(int id)
@@ -94,7 +127,6 @@ namespace ERP_API.Application.Services.Purchasing
             var invoice = _unitOfWork.PurchaseInvoices
                 .GetAllQueryable()
                 .Include(i => i.Supplier)
-                .Include(i => i.User)
                 .Include(i => i.Items)
                     .ThenInclude(item => item.ProductPackage)
                         .ThenInclude(pp => pp.ProductVariation)
@@ -112,7 +144,7 @@ namespace ERP_API.Application.Services.Purchasing
                 Id = invoice.Id,
                 InvoiceNumber = invoice.InvoiceNumber,
                 InvoiceDate = invoice.InvoiceDate,
-                SupplierName = invoice.Supplier.Name,
+                SupplierName = invoice.Supplier.SupplierName,
                 SupplierId = invoice.SupplierId,
                 TotalAmount = invoice.TotalAmount,
                 NetAmount = invoice.NetAmount,
@@ -121,7 +153,6 @@ namespace ERP_API.Application.Services.Purchasing
                 BalanceBefore = invoice.BalanceBefore,
                 BalanceAfter = invoice.BalanceAfter,
                 CreatedDate = invoice.CreatedDate,
-                CreatedByUser = invoice.User?.FullName?? "Unknown",
                 Items = invoice.Items.Select(item => new PurchaseInvoiceItemResponseDto
                 {
                     Id = item.Id,
@@ -145,14 +176,14 @@ namespace ERP_API.Application.Services.Purchasing
                     Id = i.Id,
                     InvoiceNumber = i.InvoiceNumber,
                     InvoiceDate = i.InvoiceDate,
-                    SupplierName = i.Supplier.Name,
+                    SupplierName = i.Supplier.SupplierName,
                     TotalAmount = i.TotalAmount,
                     NetAmount = i.NetAmount
                 })
                 .ToList();
         }
 
-        public async Task<List<PurchaseInvoiceListItemDto>> GetInvoicesBySupplierAsync(Guid supplierId)
+        public async Task<List<PurchaseInvoiceListItemDto>> GetInvoicesBySupplierAsync(int supplierId)
         {
             return _unitOfWork.PurchaseInvoices
                 .GetAllQueryable()
@@ -164,7 +195,7 @@ namespace ERP_API.Application.Services.Purchasing
                     Id = i.Id,
                     InvoiceNumber = i.InvoiceNumber,
                     InvoiceDate = i.InvoiceDate,
-                    SupplierName = i.Supplier.Name,
+                    SupplierName = i.Supplier.SupplierName,
                     TotalAmount = i.TotalAmount,
                     NetAmount = i.NetAmount
                 })

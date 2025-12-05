@@ -9,10 +9,10 @@ namespace ERP_API.Application.Interfaces.Purchasing
 {
     public interface IPurchaseInvoiceService
     {
-        Task<PurchaseInvoiceResponseDto> CreateInvoiceAsync(CreatePurchaseInvoiceDto dto, Guid userId);
+        Task<PurchaseInvoiceResponseDto> CreateInvoiceAsync(CreatePurchaseInvoiceDto dto);
         Task<PurchaseInvoiceResponseDto?> GetInvoiceByIdAsync(int id);
         Task<List<PurchaseInvoiceListItemDto>> GetAllInvoicesAsync();
-        Task<List<PurchaseInvoiceListItemDto>> GetInvoicesBySupplierAsync(Guid supplierId);
+        Task<List<PurchaseInvoiceListItemDto>> GetInvoicesBySupplierAsync(int supplierId);
         Task<bool> DeleteInvoiceAsync(int id);
     }
 }

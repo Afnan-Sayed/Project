@@ -1,4 +1,5 @@
-﻿using ERP_API.Application.DTOs.User;
+﻿
+using ERP_API.Application.DTOs.User;
 using ERP_API.Application.Interfaces.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +27,34 @@ namespace ERP_API.API.Controllers.User
         [HttpPost("Login")]
         public async Task<IActionResult> Login(UserLoginDto user)
         {
+            // Validation BEFORE hitting service
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
             var result = await _accountService.LoginAsync(user);
+
             if (result.Succeeded)
             {
-                return Ok(new { result.TokenResult, result.UserName, Claims = result.Claims });
+                return Ok(new
+                {
+                    result.TokenResult,
+                    result.UserName,
+                    Claims = result.Claims
+                });
             }
-            return Unauthorized(new { user.UserName, Errors = result.Errors.ToArray() });
+
+            return Unauthorized(new
+            {
+                user.UserName,
+                Errors = result.Errors.ToArray()
+            });
         }
     }
 }

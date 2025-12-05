@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,17 +9,17 @@ namespace ERP_API.DataAccess.Identity
 {
     public class TokenResult
     {
-        public required string Token { get; set; }
+        public string Token { get; set; }
         public DateTime TokenExpiryTime { get; set; }
 
-        public required List<AppClaim> Claims { get; set; }
+        public List<AppClaim> Claims { get; set; }
 
 
     }
 
     public class AppClaim
     {
-        public required string Type { get; set; }
-        public required string Value { get; set; }
+        public string Type { get; set; }
+        public string Value { get; set; }
     }
 }

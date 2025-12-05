@@ -8,10 +8,12 @@ using ERP_API.DataAccess.Entities.Sales;
 using ERP_API.DataAccess.Entities.Suppliers;
 using ERP_API.DataAccess.Entities.User;
 using ERP_API.DataAccess.Entities.Warehouse;
-using ERP_API.DataAccess.Identity;
 using ERP_API.DataAccess.Interfaces;
 using ERP_API.DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
+using ERP_API.DataAccess.Interfaces.Customers;
+using ERP_API.DataAccess.Interfaces.Suppliers;
+using ERP_API.DataAccess.Repositories.Customers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +28,9 @@ namespace ERP_API.DataAccess.DataContext
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenManager _tokenManager;
 
-        // 1. Define Lazy fields for all repositories
-        private IBaseRepository<User, Guid>? _users;
-        private IBaseRepository<Supplier, Guid>? _suppliers;
-        private IBaseRepository<Customer, Guid>? _customers;
+
+        //1. Define Lazy fields for all repositories
+        //product, warehouse, inventory 
         private readonly Lazy<IBaseRepository<Product, int>> _products;
         private readonly Lazy<IBaseRepository<ProductVariation, int>> _productVariations;
         private readonly Lazy<IBaseRepository<ProductPackage, int>> _productPackages;
@@ -38,6 +39,23 @@ namespace ERP_API.DataAccess.DataContext
         private readonly Lazy<IBaseRepository<WarehouseStock, int>> _warehouseStocks;
         private readonly Lazy<IBaseRepository<StockTransferLog, int>> _stockTransferLogs;
         private readonly Lazy<IBaseRepository<InventoryAdjustment, int>> _inventoryAdjustments;
+
+
+        //finance
+        private readonly Lazy<IBaseRepository<MainSafe, int>> _mainSafes;
+        private readonly Lazy<IBaseRepository<MainSafeLedgerEntry, int>> _mainSafeLedgerEntries;
+        private readonly Lazy<IBaseRepository<Expense, int>> _expenses;
+        private readonly Lazy<IBaseRepository<ProfitSource, int>> _profitSources;
+
+
+        //customers and suppliers
+        private readonly Lazy<IBaseRepository<CustomerTransaction, int>> _customerTransactions;
+        private readonly Lazy<IBaseRepository<SupplierTransaction, int>> _supplierTransactions;
+        private readonly Lazy<ICustomerRepository> _customers;
+        private readonly Lazy<ISupplierRepository> _suppliers;
+
+
+        //purchasing and sales
         private IBaseRepository<PurchaseInvoice, int>? _purchaseInvoices;
         private IBaseRepository<PurchaseInvoiceItem, int>? _purchaseInvoiceItems;
         private IBaseRepository<PurchaseReturn, int>? _purchaseReturns;
@@ -46,11 +64,12 @@ namespace ERP_API.DataAccess.DataContext
         private IBaseRepository<SalesInvoiceItem, int>? _salesInvoiceItems;
         private IBaseRepository<SalesReturn, int>? _salesReturns;
         private IBaseRepository<SalesReturnItem, int>? _salesReturnItems;
-        private IBaseRepository<Safe, int>? _safes;
-        private IBaseRepository<PaymentPermission, int>? _paymentPermissions;
-        private IBaseRepository<ReceiptPermission, int>? _receiptPermissions;
-        private IBaseRepository<ExpenseType, int>? _expenseTypes;
-        private IBaseRepository<RevenueSource, int>? _revenueSources;
+
+
+        /// ///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
         // 2. Constructor: Inject Context and Initialize Lazies
         public ErpUnitOfWork(ErpDBContext context, UserManager<AppUser> userManager, ITokenManager tokenManager)
@@ -59,10 +78,10 @@ namespace ERP_API.DataAccess.DataContext
             _userManager = userManager;
             _tokenManager = tokenManager;
 
+            ////////////////////////product, warehouse, inventory /////////////////////
 
             // Note: We use () => new ... (Lambda expression)
             // This ensures the object is ONLY created when someone asks for .Value
-
             _products = new Lazy<IBaseRepository<Product, int>>(() =>
                 new BaseRepository<Product, int>(_context));
 
@@ -86,21 +105,43 @@ namespace ERP_API.DataAccess.DataContext
 
             _inventoryAdjustments = new Lazy<IBaseRepository<InventoryAdjustment, int>>(() =>
                 new BaseRepository<InventoryAdjustment, int>(_context));
+
+
+
+
+            //finance
+            _mainSafes = new Lazy<IBaseRepository<MainSafe, int>>(() =>
+                new BaseRepository<MainSafe, int>(_context));
+
+            _mainSafeLedgerEntries = new Lazy<IBaseRepository<MainSafeLedgerEntry, int>>(() =>
+                new BaseRepository<MainSafeLedgerEntry, int>(_context));
+
+            _expenses = new Lazy<IBaseRepository<Expense, int>>(() =>
+                new BaseRepository<Expense, int>(_context));
+
+            _profitSources = new Lazy<IBaseRepository<ProfitSource, int>>(() =>
+                new BaseRepository<ProfitSource, int>(_context));
+
+
+
+
+            //customers and suppliers
+            _customerTransactions = new Lazy<IBaseRepository<CustomerTransaction, int>>(() =>
+            new BaseRepository<CustomerTransaction, int>(_context));
+
+            _supplierTransactions = new Lazy<IBaseRepository<SupplierTransaction, int>>(() =>
+                new BaseRepository<SupplierTransaction, int>(_context));
+
+            _customers = new Lazy<ICustomerRepository>(() =>
+                new CustomerRepository(_context));
+
+            _suppliers = new Lazy<ISupplierRepository>(() =>
+               new SupplierRepository(_context));
         }
 
-        // 3. Public Properties return the .Value
-        //User Management
-        public IBaseRepository<User, Guid> Users =>
-            _users ??= new BaseRepository<User, Guid>(_context);
-
-        //Suppliers & Customers
-        public IBaseRepository<Supplier, Guid> Suppliers =>
-            _suppliers ??= new BaseRepository<Supplier, Guid>(_context);
-        public IBaseRepository<Customer, Guid> Customers =>
-            _customers ??= new BaseRepository<Customer, Guid>(_context);
 
 
-
+            // 3. Public Properties return the .Value
         public IBaseRepository<Product, int> Products => _products.Value;
         public IBaseRepository<ProductVariation, int> ProductVariations => _productVariations.Value;
         public IBaseRepository<ProductPackage, int> ProductPackages => _productPackages.Value;
@@ -109,6 +150,22 @@ namespace ERP_API.DataAccess.DataContext
         public IBaseRepository<WarehouseStock, int> WarehouseStocks => _warehouseStocks.Value;
         public IBaseRepository<StockTransferLog, int> StockTransferLogs => _stockTransferLogs.Value;
         public IBaseRepository<InventoryAdjustment, int> InventoryAdjustments => _inventoryAdjustments.Value;
+
+
+        //finance
+        public IBaseRepository<MainSafe, int> MainSafes => _mainSafes.Value;
+        public IBaseRepository<MainSafeLedgerEntry, int> MainSafeLedgerEntry => _mainSafeLedgerEntries.Value;
+        public IBaseRepository<Expense, int> Expenses => _expenses.Value;
+        public IBaseRepository<ProfitSource, int> ProfitSources => _profitSources.Value;
+
+
+        //customers and suppliers
+        public ICustomerRepository Customers => _customers.Value;
+        public ISupplierRepository Suppliers => _suppliers.Value;
+
+        public IBaseRepository<CustomerTransaction, int> CustomerTransactions => _customerTransactions.Value;
+        public IBaseRepository<SupplierTransaction, int> SupplierTransactions => _supplierTransactions.Value;
+
 
 
 
@@ -132,34 +189,19 @@ namespace ERP_API.DataAccess.DataContext
         public IBaseRepository<SalesReturnItem, int> SalesReturnItems =>
             _salesReturnItems ??= new BaseRepository<SalesReturnItem, int>(_context);
 
-        //Finance
-        public IBaseRepository<Safe, int> Safes =>
-            _safes ??= new BaseRepository<Safe, int>(_context);
-        public IBaseRepository<PaymentPermission, int> PaymentPermissions =>
-            _paymentPermissions ??= new BaseRepository<PaymentPermission, int>(_context);
-        public IBaseRepository<ReceiptPermission, int> ReceiptPermissions =>
-            _receiptPermissions ??= new BaseRepository<ReceiptPermission, int>(_context);
-        public IBaseRepository<ExpenseType, int> ExpenseTypes =>
-            _expenseTypes ??= new BaseRepository<ExpenseType, int>(_context);
-        public IBaseRepository<RevenueSource, int> RevenueSources =>
-            _revenueSources ??= new BaseRepository<RevenueSource, int>(_context);
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
         public UserManager<AppUser> UserManager => _userManager;
+
         public ITokenManager TokenManager => _tokenManager;
 
 
-
-
-
-        public void SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            _context.SaveChanges();
-        }
-
-        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            return await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync();
         }
     }
 }
