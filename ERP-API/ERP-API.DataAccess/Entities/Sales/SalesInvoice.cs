@@ -22,16 +22,14 @@ namespace ERP_API.DataAccess.Entities.Sales
         public decimal BalanceAfter { get; set; }
 
         // Customer Relationship
-        public Guid CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public Customer Customer { get; set; } = default!;
 
-        // User Relationship
-        public Guid UserId { get; set; }
-        public ERP_API.DataAccess.Entities.User.User User{ get; set; } = default!;
+        //public int UserId { get; set; } = default!;
+
 
         // Invoice Items
         public ICollection<SalesInvoiceItem> Items { get; set; } = new List<SalesInvoiceItem>();
-
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

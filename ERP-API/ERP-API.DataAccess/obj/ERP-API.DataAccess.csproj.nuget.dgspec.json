@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj": {}
+    "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj": {}
   },
   "projects": {
-    "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj": {
+    "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj",
+        "projectUniqueName": "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj",
         "projectName": "ERP-API.DataAccess",
-        "projectPath": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj",
-        "packagesPath": "C:\\Users\\afnan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\afnan\\source\\repos\\DEPI-Project\\ERP-API\\ERP-API.DataAccess\\obj\\",
+        "projectPath": "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj",
+        "packagesPath": "C:\\Users\\YoussefEbrahimMostaf\\.nuget\\packages\\",
+        "outputPath": "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\afnan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\YoussefEbrahimMostaf\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,19 +44,25 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
-            "Microsoft.EntityFrameworkCore": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[9.0.11, )"
             },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.3.1, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.11, )"
             },
@@ -67,14 +73,6 @@
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
-              "target": "Package",
-              "version": "[9.0.11, )"
-            },
-            "Microsoft.Extensions.Configuration": {
-              "target": "Package",
-              "version": "[9.0.11, )"
-            },
-            "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[9.0.11, )"
             }
@@ -95,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

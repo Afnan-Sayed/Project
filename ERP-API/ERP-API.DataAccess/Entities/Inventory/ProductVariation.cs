@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERP_API.DataAccess.Entities.Inventory
 {
-    public class ProductVariation
+    public class ProductVariation 
     {
         public int Id { get; set; }
 

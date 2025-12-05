@@ -16,12 +16,10 @@ namespace ERP_API.DataAccess.Entities.Sales
         public string? Reason { get; set; }
 
         // Customer Relationship
-        public Guid CustomerId { get; set; }
+        public int CustomerId { get; set; }
         public Customer Customer { get; set; } = default!;
 
-        // User Relationship
-        public Guid UserId { get; set; }
-        public ERP_API.DataAccess.Entities.User.User User { get; set; } = default!;
+        //public int UserId { get; set; } = default!;
 
         // Return Items
         public ICollection<SalesReturnItem> Items { get; set; } = new List<SalesReturnItem>();

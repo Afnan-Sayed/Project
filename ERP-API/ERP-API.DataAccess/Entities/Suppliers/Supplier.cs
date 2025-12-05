@@ -1,30 +1,46 @@
-﻿using ERP_API.DataAccess.Entities.Finance;
-using ERP_API.DataAccess.Entities.Purchasing;
-using ERP_API.DataAccess.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP_API.DataAccess.Entities.Suppliers
 {
+    [Table("Suppliers")]
     public class Supplier
     {
-        public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public string? Email { get; set; }
-        public required string Phone { get; set; } = default!;
-        public string? Address { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string SupplierName { get; set; } = string.Empty;
+
+        [StringLength(50)]
         public string? TaxNumber { get; set; }
 
-        public decimal? InitialBalance { get; set; }
-        public SupplierBalanceType? BalanceType { get; set; }
+        [StringLength(100)]
+        [EmailAddress]
+        public string? Email { get; set; }
 
-        public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; } = new List<PurchaseInvoice>();
-        public ICollection<PurchaseReturn> PurchaseReturns { get; set; } = new List<PurchaseReturn>();
-        public ICollection<PaymentPermission> Payments { get; set; } = new List<PaymentPermission>();
-        public ICollection<ReceiptPermission> Receipts { get; set; } = new List<ReceiptPermission>();
+        [StringLength(20)]
+        [Phone]
+        public string? Phone { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal OpeningBalance { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalBalance { get; set; }
+
+        [StringLength(500)]
+        public string? Description { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation properties
+        public virtual ICollection<SupplierTransaction> Transactions { get; set; } = new List<SupplierTransaction>();
     }
 }

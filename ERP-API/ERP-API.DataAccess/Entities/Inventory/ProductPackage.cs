@@ -1,13 +1,13 @@
-﻿using System;
+﻿using ERP_API.DataAccess.Entities.Warehouse;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ERP_API.DataAccess.Entities.Warehouse;
 
 namespace ERP_API.DataAccess.Entities.Inventory
 {
-    public class ProductPackage
+    public class ProductPackage 
     {
         public int Id { get; set; }
 

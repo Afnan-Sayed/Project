@@ -1,11 +1,11 @@
-﻿using ERP_API.DataAccess.DataContext;
+﻿using ERP_API.DataAccess.Interfaces;
+using ERP_API.DataAccess.DataContext;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using ERP_API.DataAccess.Interfaces;
 
 namespace ERP_API.DataAccess.Repositories
 {
@@ -20,24 +20,9 @@ namespace ERP_API.DataAccess.Repositories
             _dbSet = _shoppingDbContext.Set<TEntity>();
         }
 
-        public IEnumerable<TEntity> GetAll()
-        {
-            return _dbSet.AsEnumerable();
-        }
-
         public IQueryable<TEntity> GetAllQueryable()
         {
             return _dbSet.AsQueryable();
-        }
-
-        public TEntity? FindById(TId id)
-        {
-            return _dbSet.Find(id);
-        }
-
-        public void Create(TEntity entity)
-        {
-            _dbSet.Add(entity);
         }
 
         public void Update(TEntity entity)
@@ -45,9 +30,26 @@ namespace ERP_API.DataAccess.Repositories
             _dbSet.Update(entity);
         }
 
-        public TEntity? Delete(TId id)
+
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            TEntity? entity = FindById(id);
+            return await _dbSet.ToListAsync();
+        }
+
+        public async Task<TEntity?> FindByIdAsync(TId id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public async Task CreateAsync(TEntity entity)
+        {
+            await _dbSet.AddAsync(entity);
+        }
+
+        public async Task<TEntity?> DeleteAsync(TId id)
+        {
+            TEntity? entity = await FindByIdAsync(id);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
@@ -55,6 +57,5 @@ namespace ERP_API.DataAccess.Repositories
             }
             return null;
         }
-
     }
 }

@@ -1,28 +1,46 @@
-﻿using ERP_API.DataAccess.Entities.Finance;
-using ERP_API.DataAccess.Entities.Sales;
-using ERP_API.DataAccess.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERP_API.DataAccess.Entities.Customers
 {
+    [Table("Customers")]
     public class Customer
     {
-        public Guid Id { get; set; }
-        public required string Name { get; set; }
-        public string? Email { get; set; }
-        public required string Phone { get; set; } = default!;
-        public string? Address { get; set; }
-        public string? TaxNum { get; set; }
-        public int? InitialBalance { get; set; }
-        public CustomerBalanceType? BalanceType { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-        public ICollection<SalesInvoice> SalesInvoices { get; set; } = new List<SalesInvoice>();
-        public ICollection<SalesReturn> SalesReturns { get; set; } = new List<SalesReturn>();
-        public ICollection<PaymentPermission> Payments { get; set; } = new List<PaymentPermission>();
-        public ICollection<ReceiptPermission> Receipts { get; set; } = new List<ReceiptPermission>();
+        [Required]
+        [StringLength(200)]
+        public string CustomerName { get; set; } = string.Empty;
+
+        [StringLength(50)]
+        public string? TaxNumber { get; set; }
+
+        [StringLength(100)]
+        [EmailAddress]
+        public string? Email { get; set; }
+
+        [StringLength(20)]
+        [Phone]
+        public string? Phone { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal OpeningBalance { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal TotalBalance { get; set; }
+
+        [StringLength(500)]
+        public string? Description { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation properties
+        public virtual ICollection<CustomerTransaction> Transactions { get; set; } = new List<CustomerTransaction>();
     }
 }
