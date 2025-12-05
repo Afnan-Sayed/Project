@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP_API.DataAccess.Migrations
 {
     [DbContext(typeof(ErpDBContext))]
-    [Migration("20251204144441_InitialCreate3")]
-    partial class InitialCreate3
+    [Migration("20251205010949_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,62 +42,36 @@ namespace ERP_API.DataAccess.Migrations
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Customers.Customer", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BalanceType")
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("InitialBalance")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("CustomerName")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("TaxNum")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("TotalBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.ExpenseType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ExpenseTypes");
-                });
-
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.PaymentPermission", b =>
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Customers.CustomerTransaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -106,120 +80,42 @@ namespace ERP_API.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReferenceType")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
-
-                    b.Property<int>("SafeId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("SupplierId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("SafeId");
-
-                    b.HasIndex("SupplierId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PaymentPermissions");
-                });
-
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.ReceiptPermission", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid?>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
-                    b.Property<int?>("ExpenseTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReferenceType")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RevenueSourceId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SafeId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("SupplierId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("ExpenseTypeId");
-
-                    b.HasIndex("RevenueSourceId");
-
-                    b.HasIndex("SafeId");
-
-                    b.HasIndex("SupplierId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ReceiptPermissions");
-                });
-
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.RevenueSource", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("Direction")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RevenueSources");
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("CustomerTransactions");
                 });
 
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.Safe", b =>
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.Expense", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -227,28 +123,164 @@ namespace ERP_API.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ExpenseName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.MainSafe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("CurrentBalance")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("IsMainSafe")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
                     b.Property<decimal>("OpeningBalance")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("SafeName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Safes");
+                    b.ToTable("MainSafes");
+                });
+
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.MainSafeLedgerEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BalanceAfterEntry")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("CreditAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("CustomerTransactionId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("DebitAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Direction")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("EntryDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("EntryTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExpenseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MainSafeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PerformedByUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ProfitSourceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReferenceRecordId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReferenceTable")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int?>("SupplierTransactionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerTransactionId");
+
+                    b.HasIndex("ExpenseId");
+
+                    b.HasIndex("MainSafeId");
+
+                    b.HasIndex("PerformedByUserId");
+
+                    b.HasIndex("ProfitSourceId");
+
+                    b.HasIndex("SupplierTransactionId");
+
+                    b.ToTable("MainSafeLedgerEntries");
+                });
+
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.ProfitSource", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("SourceName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProfitSources");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Inventory.Category", b =>
@@ -261,8 +293,7 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -282,13 +313,11 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnitOfMeasurement")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -311,8 +340,7 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -331,8 +359,7 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.Property<string>("Barcode")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PackageTypeId")
                         .HasColumnType("int");
@@ -341,21 +368,15 @@ namespace ERP_API.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("PurchasePrice")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("QinP")
-                        .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<decimal>("SalesPrice")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Barcode")
-                        .IsUnique();
 
                     b.HasIndex("PackageTypeId");
 
@@ -384,8 +405,7 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.Property<string>("SKU")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Size")
                         .HasColumnType("nvarchar(max)");
@@ -393,9 +413,6 @@ namespace ERP_API.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("SKU")
-                        .IsUnique();
 
                     b.ToTable("ProductVariations");
                 });
@@ -416,15 +433,12 @@ namespace ERP_API.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Difference")
-                        .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<decimal>("NewQuantity")
-                        .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<decimal>("OldQuantity")
-                        .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("ProductPackageId")
@@ -434,8 +448,8 @@ namespace ERP_API.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("WarehouseId")
                         .HasColumnType("int");
@@ -443,8 +457,6 @@ namespace ERP_API.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductPackageId");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("WarehouseId");
 
@@ -468,6 +480,9 @@ namespace ERP_API.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
                     b.Property<decimal?>("Discount")
                         .HasColumnType("decimal(18,2)");
 
@@ -486,24 +501,24 @@ namespace ERP_API.DataAccess.Migrations
                     b.Property<decimal?>("PaymentOrderAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("SupplierId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("InvoiceNumber")
                         .IsUnique();
 
                     b.HasIndex("SupplierId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PurchaseInvoices");
                 });
@@ -554,20 +569,18 @@ namespace ERP_API.DataAccess.Migrations
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SupplierId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SupplierId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("PurchaseReturns");
                 });
@@ -624,8 +637,8 @@ namespace ERP_API.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Discount")
                         .HasColumnType("decimal(18,2)");
@@ -642,12 +655,15 @@ namespace ERP_API.DataAccess.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("SupplierId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -656,7 +672,7 @@ namespace ERP_API.DataAccess.Migrations
                     b.HasIndex("InvoiceNumber")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("SalesInvoices");
                 });
@@ -704,8 +720,8 @@ namespace ERP_API.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
@@ -716,14 +732,12 @@ namespace ERP_API.DataAccess.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("SalesReturns");
                 });
@@ -762,39 +776,77 @@ namespace ERP_API.DataAccess.Migrations
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Suppliers.Supplier", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BalanceType")
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal?>("InitialBalance")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("SupplierName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("TotalBalance")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("TaxNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.ToTable("Suppliers");
+                });
+
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Suppliers.SupplierTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Direction")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TransactionType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("SupplierTransactions");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.User.AppUser", b =>
@@ -866,6 +918,9 @@ namespace ERP_API.DataAccess.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int>("myId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -894,44 +949,6 @@ namespace ERP_API.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppUserPermissions");
-                });
-
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.User.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("Permissions")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Warehouse.StockTransferLog", b =>
@@ -984,8 +1001,7 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1001,14 +1017,12 @@ namespace ERP_API.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("MinStockLevel")
-                        .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("ProductPackageId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Quantity")
-                        .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("WarehouseId")
@@ -1018,8 +1032,7 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.HasIndex("ProductPackageId");
 
-                    b.HasIndex("WarehouseId", "ProductPackageId")
-                        .IsUnique();
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("WarehouseStocks");
                 });
@@ -1172,88 +1185,65 @@ namespace ERP_API.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.PaymentPermission", b =>
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Customers.CustomerTransaction", b =>
                 {
                     b.HasOne("ERP_API.DataAccess.Entities.Customers.Customer", "Customer")
-                        .WithMany("Payments")
+                        .WithMany("Transactions")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("ERP_API.DataAccess.Entities.Finance.Safe", "Safe")
-                        .WithMany("Payments")
-                        .HasForeignKey("SafeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ERP_API.DataAccess.Entities.Suppliers.Supplier", "Supplier")
-                        .WithMany("Payments")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("ERP_API.DataAccess.Entities.User.User", "User")
-                        .WithMany("PaymentPermissions")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("Safe");
-
-                    b.Navigation("Supplier");
-
-                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.ReceiptPermission", b =>
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.MainSafeLedgerEntry", b =>
                 {
-                    b.HasOne("ERP_API.DataAccess.Entities.Customers.Customer", "Customer")
-                        .WithMany("Receipts")
-                        .HasForeignKey("CustomerId");
+                    b.HasOne("ERP_API.DataAccess.Entities.Customers.CustomerTransaction", "CustomerTransaction")
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("CustomerTransactionId");
 
-                    b.HasOne("ERP_API.DataAccess.Entities.Finance.ExpenseType", "ExpenseType")
-                        .WithMany("Receipts")
-                        .HasForeignKey("ExpenseTypeId");
+                    b.HasOne("ERP_API.DataAccess.Entities.Finance.Expense", "Expense")
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("ExpenseId");
 
-                    b.HasOne("ERP_API.DataAccess.Entities.Finance.RevenueSource", "RevenueSource")
-                        .WithMany("Receipts")
-                        .HasForeignKey("RevenueSourceId");
-
-                    b.HasOne("ERP_API.DataAccess.Entities.Finance.Safe", "Safe")
-                        .WithMany("Receipts")
-                        .HasForeignKey("SafeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ERP_API.DataAccess.Entities.Suppliers.Supplier", "Supplier")
-                        .WithMany("Receipts")
-                        .HasForeignKey("SupplierId");
-
-                    b.HasOne("ERP_API.DataAccess.Entities.User.User", "User")
-                        .WithMany("ReceiptPermissions")
-                        .HasForeignKey("UserId")
+                    b.HasOne("ERP_API.DataAccess.Entities.Finance.MainSafe", "MainSafe")
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("MainSafeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.HasOne("ERP_API.DataAccess.Entities.User.AppUser", "PerformedByUser")
+                        .WithMany()
+                        .HasForeignKey("PerformedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ExpenseType");
+                    b.HasOne("ERP_API.DataAccess.Entities.Finance.ProfitSource", "ProfitSource")
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("ProfitSourceId");
 
-                    b.Navigation("RevenueSource");
+                    b.HasOne("ERP_API.DataAccess.Entities.Suppliers.SupplierTransaction", "SupplierTransaction")
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("SupplierTransactionId");
 
-                    b.Navigation("Safe");
+                    b.Navigation("CustomerTransaction");
 
-                    b.Navigation("Supplier");
+                    b.Navigation("Expense");
 
-                    b.Navigation("User");
+                    b.Navigation("MainSafe");
+
+                    b.Navigation("PerformedByUser");
+
+                    b.Navigation("ProfitSource");
+
+                    b.Navigation("SupplierTransaction");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Inventory.Product", b =>
                 {
                     b.HasOne("ERP_API.DataAccess.Entities.Inventory.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
@@ -1296,11 +1286,6 @@ namespace ERP_API.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERP_API.DataAccess.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ERP_API.DataAccess.Entities.Warehouse.Warehouse", "Warehouse")
                         .WithMany()
                         .HasForeignKey("WarehouseId")
@@ -1309,28 +1294,22 @@ namespace ERP_API.DataAccess.Migrations
 
                     b.Navigation("ProductPackage");
 
-                    b.Navigation("User");
-
                     b.Navigation("Warehouse");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Purchasing.PurchaseInvoice", b =>
                 {
+                    b.HasOne("ERP_API.DataAccess.Entities.Customers.Customer", null)
+                        .WithMany("PurchaseInvoices")
+                        .HasForeignKey("CustomerId");
+
                     b.HasOne("ERP_API.DataAccess.Entities.Suppliers.Supplier", "Supplier")
                         .WithMany("PurchaseInvoices")
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ERP_API.DataAccess.Entities.User.User", "User")
-                        .WithMany("PurchaseInvoices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Supplier");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Purchasing.PurchaseInvoiceItem", b =>
@@ -1355,20 +1334,12 @@ namespace ERP_API.DataAccess.Migrations
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Purchasing.PurchaseReturn", b =>
                 {
                     b.HasOne("ERP_API.DataAccess.Entities.Suppliers.Supplier", "Supplier")
-                        .WithMany("PurchaseReturns")
+                        .WithMany()
                         .HasForeignKey("SupplierId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERP_API.DataAccess.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Supplier");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Purchasing.PurchaseReturnItem", b =>
@@ -1398,15 +1369,11 @@ namespace ERP_API.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ERP_API.DataAccess.Entities.User.User", "User")
+                    b.HasOne("ERP_API.DataAccess.Entities.Suppliers.Supplier", null)
                         .WithMany("SalesInvoices")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("SupplierId");
 
                     b.Navigation("Customer");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Sales.SalesInvoiceItem", b =>
@@ -1431,20 +1398,12 @@ namespace ERP_API.DataAccess.Migrations
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Sales.SalesReturn", b =>
                 {
                     b.HasOne("ERP_API.DataAccess.Entities.Customers.Customer", "Customer")
-                        .WithMany("SalesReturns")
+                        .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERP_API.DataAccess.Entities.User.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Sales.SalesReturnItem", b =>
@@ -1464,6 +1423,17 @@ namespace ERP_API.DataAccess.Migrations
                     b.Navigation("ProductPackage");
 
                     b.Navigation("SalesReturn");
+                });
+
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Suppliers.SupplierTransaction", b =>
+                {
+                    b.HasOne("ERP_API.DataAccess.Entities.Suppliers.Supplier", "Supplier")
+                        .WithMany("Transactions")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Warehouse.StockTransferLog", b =>
@@ -1565,30 +1535,31 @@ namespace ERP_API.DataAccess.Migrations
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Customers.Customer", b =>
                 {
-                    b.Navigation("Payments");
-
-                    b.Navigation("Receipts");
+                    b.Navigation("PurchaseInvoices");
 
                     b.Navigation("SalesInvoices");
 
-                    b.Navigation("SalesReturns");
+                    b.Navigation("Transactions");
                 });
 
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.ExpenseType", b =>
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Customers.CustomerTransaction", b =>
                 {
-                    b.Navigation("Receipts");
+                    b.Navigation("LedgerEntries");
                 });
 
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.RevenueSource", b =>
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.Expense", b =>
                 {
-                    b.Navigation("Receipts");
+                    b.Navigation("LedgerEntries");
                 });
 
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.Safe", b =>
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.MainSafe", b =>
                 {
-                    b.Navigation("Payments");
+                    b.Navigation("LedgerEntries");
+                });
 
-                    b.Navigation("Receipts");
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Finance.ProfitSource", b =>
+                {
+                    b.Navigation("LedgerEntries");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Inventory.Category", b =>
@@ -1638,24 +1609,16 @@ namespace ERP_API.DataAccess.Migrations
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Suppliers.Supplier", b =>
                 {
-                    b.Navigation("Payments");
-
                     b.Navigation("PurchaseInvoices");
-
-                    b.Navigation("PurchaseReturns");
-
-                    b.Navigation("Receipts");
-                });
-
-            modelBuilder.Entity("ERP_API.DataAccess.Entities.User.User", b =>
-                {
-                    b.Navigation("PaymentPermissions");
-
-                    b.Navigation("PurchaseInvoices");
-
-                    b.Navigation("ReceiptPermissions");
 
                     b.Navigation("SalesInvoices");
+
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("ERP_API.DataAccess.Entities.Suppliers.SupplierTransaction", b =>
+                {
+                    b.Navigation("LedgerEntries");
                 });
 
             modelBuilder.Entity("ERP_API.DataAccess.Entities.Warehouse.Warehouse", b =>

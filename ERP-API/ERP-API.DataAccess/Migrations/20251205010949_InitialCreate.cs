@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ERP_API.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate3 : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,6 +43,7 @@ namespace ERP_API.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    myId = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -74,7 +75,7 @@ namespace ERP_API.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,14 +86,13 @@ namespace ERP_API.DataAccess.Migrations
                 name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TaxNum = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InitialBalance = table.Column<int>(type: "int", nullable: true),
-                    BalanceType = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CustomerName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    TotalBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,17 +100,37 @@ namespace ERP_API.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExpenseTypes",
+                name: "Expenses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ExpenseName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExpenseTypes", x => x.Id);
+                    table.PrimaryKey("PK_Expenses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MainSafes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SafeName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    OpeningBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CurrentBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MainSafes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,9 +139,9 @@ namespace ERP_API.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UnitOfMeasurement = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    UnitOfMeasurement = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -129,69 +149,36 @@ namespace ERP_API.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RevenueSources",
+                name: "ProfitSources",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    SourceName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RevenueSources", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Safes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    OpeningBalance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    CurrentBalance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    IsMainSafe = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Safes", x => x.Id);
+                    table.PrimaryKey("PK_ProfitSources", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Suppliers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InitialBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    BalanceType = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SupplierName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    TotalBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false),
-                    Permissions = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -200,7 +187,7 @@ namespace ERP_API.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsMainWarehouse = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -345,7 +332,7 @@ namespace ERP_API.DataAccess.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -356,50 +343,54 @@ namespace ERP_API.DataAccess.Migrations
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaymentPermissions",
+                name: "CustomerTransactions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReferenceType = table.Column<int>(type: "int", nullable: false),
-                    SafeId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    TransactionType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Direction = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentPermissions", x => x.Id);
+                    table.PrimaryKey("PK_CustomerTransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentPermissions_Customers_CustomerId",
+                        name: "FK_CustomerTransactions_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SalesReturns",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SalesReturns", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaymentPermissions_Safes_SafeId",
-                        column: x => x.SafeId,
-                        principalTable: "Safes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PaymentPermissions_Suppliers_SupplierId",
-                        column: x => x.SupplierId,
-                        principalTable: "Suppliers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_PaymentPermissions_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_SalesReturns_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -418,23 +409,23 @@ namespace ERP_API.DataAccess.Migrations
                     PaymentOrderAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     BalanceBefore = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BalanceAfter = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PurchaseInvoices", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_PurchaseInvoices_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_PurchaseInvoices_Suppliers_SupplierId",
                         column: x => x.SupplierId,
                         principalTable: "Suppliers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PurchaseInvoices_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -448,8 +439,8 @@ namespace ERP_API.DataAccess.Migrations
                     ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -458,66 +449,6 @@ namespace ERP_API.DataAccess.Migrations
                         name: "FK_PurchaseReturns_Suppliers_SupplierId",
                         column: x => x.SupplierId,
                         principalTable: "Suppliers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PurchaseReturns_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ReceiptPermissions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReferenceType = table.Column<int>(type: "int", nullable: false),
-                    SafeId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SupplierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ExpenseTypeId = table.Column<int>(type: "int", nullable: true),
-                    RevenueSourceId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReceiptPermissions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ReceiptPermissions_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ReceiptPermissions_ExpenseTypes_ExpenseTypeId",
-                        column: x => x.ExpenseTypeId,
-                        principalTable: "ExpenseTypes",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ReceiptPermissions_RevenueSources_RevenueSourceId",
-                        column: x => x.RevenueSourceId,
-                        principalTable: "RevenueSources",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ReceiptPermissions_Safes_SafeId",
-                        column: x => x.SafeId,
-                        principalTable: "Safes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ReceiptPermissions_Suppliers_SupplierId",
-                        column: x => x.SupplierId,
-                        principalTable: "Suppliers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ReceiptPermissions_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -536,9 +467,10 @@ namespace ERP_API.DataAccess.Migrations
                     AmountReceived = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     BalanceBefore = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BalanceAfter = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SupplierId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -550,38 +482,34 @@ namespace ERP_API.DataAccess.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SalesInvoices_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_SalesInvoices_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "SalesReturns",
+                name: "SupplierTransactions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
+                    TransactionType = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Direction = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SalesReturns", x => x.Id);
+                    table.PrimaryKey("PK_SupplierTransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SalesReturns_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SalesReturns_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_SupplierTransactions_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -593,7 +521,7 @@ namespace ERP_API.DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SKU = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SKU = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Flavor = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Size = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProductId = table.Column<int>(type: "int", nullable: false)
@@ -610,6 +538,66 @@ namespace ERP_API.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MainSafeLedgerEntries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MainSafeId = table.Column<int>(type: "int", nullable: false),
+                    EntryTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EntryDescription = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    DebitAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreditAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    BalanceAfterEntry = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ReferenceTable = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ReferenceRecordId = table.Column<int>(type: "int", nullable: false),
+                    PerformedByUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Direction = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CustomerTransactionId = table.Column<int>(type: "int", nullable: true),
+                    SupplierTransactionId = table.Column<int>(type: "int", nullable: true),
+                    ExpenseId = table.Column<int>(type: "int", nullable: true),
+                    ProfitSourceId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MainSafeLedgerEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MainSafeLedgerEntries_AspNetUsers_PerformedByUserId",
+                        column: x => x.PerformedByUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MainSafeLedgerEntries_CustomerTransactions_CustomerTransactionId",
+                        column: x => x.CustomerTransactionId,
+                        principalTable: "CustomerTransactions",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MainSafeLedgerEntries_Expenses_ExpenseId",
+                        column: x => x.ExpenseId,
+                        principalTable: "Expenses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MainSafeLedgerEntries_MainSafes_MainSafeId",
+                        column: x => x.MainSafeId,
+                        principalTable: "MainSafes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MainSafeLedgerEntries_ProfitSources_ProfitSourceId",
+                        column: x => x.ProfitSourceId,
+                        principalTable: "ProfitSources",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MainSafeLedgerEntries_SupplierTransactions_SupplierTransactionId",
+                        column: x => x.SupplierTransactionId,
+                        principalTable: "SupplierTransactions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductPackages",
                 columns: table => new
                 {
@@ -617,10 +605,10 @@ namespace ERP_API.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductVariationId = table.Column<int>(type: "int", nullable: false),
                     PackageTypeId = table.Column<int>(type: "int", nullable: false),
-                    QinP = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    PurchasePrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    SalesPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Barcode = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    QinP = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    PurchasePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SalesPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Barcode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -648,12 +636,12 @@ namespace ERP_API.DataAccess.Migrations
                     AdjustmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     WarehouseId = table.Column<int>(type: "int", nullable: false),
                     ProductPackageId = table.Column<int>(type: "int", nullable: false),
-                    OldQuantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    NewQuantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    Difference = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    OldQuantity = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    NewQuantity = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Difference = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     AdjustmentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -664,12 +652,6 @@ namespace ERP_API.DataAccess.Migrations
                         principalTable: "ProductPackages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InventoryAdjustments_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_InventoryAdjustments_Warehouses_WarehouseId",
                         column: x => x.WarehouseId,
@@ -838,8 +820,8 @@ namespace ERP_API.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     WarehouseId = table.Column<int>(type: "int", nullable: false),
                     ProductPackageId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    MinStockLevel = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false)
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    MinStockLevel = table.Column<decimal>(type: "decimal(18,4)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -903,14 +885,14 @@ namespace ERP_API.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomerTransactions_CustomerId",
+                table: "CustomerTransactions",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InventoryAdjustments_ProductPackageId",
                 table: "InventoryAdjustments",
                 column: "ProductPackageId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InventoryAdjustments_UserId",
-                table: "InventoryAdjustments",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_InventoryAdjustments_WarehouseId",
@@ -918,30 +900,34 @@ namespace ERP_API.DataAccess.Migrations
                 column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentPermissions_CustomerId",
-                table: "PaymentPermissions",
-                column: "CustomerId");
+                name: "IX_MainSafeLedgerEntries_CustomerTransactionId",
+                table: "MainSafeLedgerEntries",
+                column: "CustomerTransactionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentPermissions_SafeId",
-                table: "PaymentPermissions",
-                column: "SafeId");
+                name: "IX_MainSafeLedgerEntries_ExpenseId",
+                table: "MainSafeLedgerEntries",
+                column: "ExpenseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentPermissions_SupplierId",
-                table: "PaymentPermissions",
-                column: "SupplierId");
+                name: "IX_MainSafeLedgerEntries_MainSafeId",
+                table: "MainSafeLedgerEntries",
+                column: "MainSafeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentPermissions_UserId",
-                table: "PaymentPermissions",
-                column: "UserId");
+                name: "IX_MainSafeLedgerEntries_PerformedByUserId",
+                table: "MainSafeLedgerEntries",
+                column: "PerformedByUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductPackages_Barcode",
-                table: "ProductPackages",
-                column: "Barcode",
-                unique: true);
+                name: "IX_MainSafeLedgerEntries_ProfitSourceId",
+                table: "MainSafeLedgerEntries",
+                column: "ProfitSourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MainSafeLedgerEntries_SupplierTransactionId",
+                table: "MainSafeLedgerEntries",
+                column: "SupplierTransactionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductPackages_PackageTypeId",
@@ -964,12 +950,6 @@ namespace ERP_API.DataAccess.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductVariations_SKU",
-                table: "ProductVariations",
-                column: "SKU",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PurchaseInvoiceItems_ProductPackageId",
                 table: "PurchaseInvoiceItems",
                 column: "ProductPackageId");
@@ -978,6 +958,11 @@ namespace ERP_API.DataAccess.Migrations
                 name: "IX_PurchaseInvoiceItems_PurchaseInvoiceId",
                 table: "PurchaseInvoiceItems",
                 column: "PurchaseInvoiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PurchaseInvoices_CustomerId",
+                table: "PurchaseInvoices",
+                column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseInvoices_InvoiceNumber",
@@ -989,11 +974,6 @@ namespace ERP_API.DataAccess.Migrations
                 name: "IX_PurchaseInvoices_SupplierId",
                 table: "PurchaseInvoices",
                 column: "SupplierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseInvoices_UserId",
-                table: "PurchaseInvoices",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseReturnItems_ProductPackageId",
@@ -1009,41 +989,6 @@ namespace ERP_API.DataAccess.Migrations
                 name: "IX_PurchaseReturns_SupplierId",
                 table: "PurchaseReturns",
                 column: "SupplierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseReturns_UserId",
-                table: "PurchaseReturns",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReceiptPermissions_CustomerId",
-                table: "ReceiptPermissions",
-                column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReceiptPermissions_ExpenseTypeId",
-                table: "ReceiptPermissions",
-                column: "ExpenseTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReceiptPermissions_RevenueSourceId",
-                table: "ReceiptPermissions",
-                column: "RevenueSourceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReceiptPermissions_SafeId",
-                table: "ReceiptPermissions",
-                column: "SafeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReceiptPermissions_SupplierId",
-                table: "ReceiptPermissions",
-                column: "SupplierId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ReceiptPermissions_UserId",
-                table: "ReceiptPermissions",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SalesInvoiceItems_ProductPackageId",
@@ -1067,9 +1012,9 @@ namespace ERP_API.DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SalesInvoices_UserId",
+                name: "IX_SalesInvoices_SupplierId",
                 table: "SalesInvoices",
-                column: "UserId");
+                column: "SupplierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SalesReturnItems_ProductPackageId",
@@ -1087,11 +1032,6 @@ namespace ERP_API.DataAccess.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SalesReturns_UserId",
-                table: "SalesReturns",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StockTransferLogs_FromWarehouseId",
                 table: "StockTransferLogs",
                 column: "FromWarehouseId");
@@ -1107,10 +1047,9 @@ namespace ERP_API.DataAccess.Migrations
                 column: "ToWarehouseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Email",
-                table: "Users",
-                column: "Email",
-                unique: true);
+                name: "IX_SupplierTransactions_SupplierId",
+                table: "SupplierTransactions",
+                column: "SupplierId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WarehouseStocks_ProductPackageId",
@@ -1118,10 +1057,9 @@ namespace ERP_API.DataAccess.Migrations
                 column: "ProductPackageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WarehouseStocks_WarehouseId_ProductPackageId",
+                name: "IX_WarehouseStocks_WarehouseId",
                 table: "WarehouseStocks",
-                columns: new[] { "WarehouseId", "ProductPackageId" },
-                unique: true);
+                column: "WarehouseId");
         }
 
         /// <inheritdoc />
@@ -1149,16 +1087,13 @@ namespace ERP_API.DataAccess.Migrations
                 name: "InventoryAdjustments");
 
             migrationBuilder.DropTable(
-                name: "PaymentPermissions");
+                name: "MainSafeLedgerEntries");
 
             migrationBuilder.DropTable(
                 name: "PurchaseInvoiceItems");
 
             migrationBuilder.DropTable(
                 name: "PurchaseReturnItems");
-
-            migrationBuilder.DropTable(
-                name: "ReceiptPermissions");
 
             migrationBuilder.DropTable(
                 name: "SalesInvoiceItems");
@@ -1182,19 +1117,25 @@ namespace ERP_API.DataAccess.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "CustomerTransactions");
+
+            migrationBuilder.DropTable(
+                name: "Expenses");
+
+            migrationBuilder.DropTable(
+                name: "MainSafes");
+
+            migrationBuilder.DropTable(
+                name: "ProfitSources");
+
+            migrationBuilder.DropTable(
+                name: "SupplierTransactions");
+
+            migrationBuilder.DropTable(
                 name: "PurchaseInvoices");
 
             migrationBuilder.DropTable(
                 name: "PurchaseReturns");
-
-            migrationBuilder.DropTable(
-                name: "ExpenseTypes");
-
-            migrationBuilder.DropTable(
-                name: "RevenueSources");
-
-            migrationBuilder.DropTable(
-                name: "Safes");
 
             migrationBuilder.DropTable(
                 name: "SalesInvoices");
@@ -1213,9 +1154,6 @@ namespace ERP_API.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "PackageTypes");
