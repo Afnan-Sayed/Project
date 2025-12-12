@@ -20,5 +20,6 @@ namespace ERP_API.Application.Interfaces
         Task<VariationResponseDto> AddVariationAsync(int productId, VariationInsertDto dto);
 
         Task<PackageResponseDto> AddPackageAsync(int variationId, PackageLinkInsertDto dto);
+        Task<List<ProductPackageListDto>> GetAllProductPackagesAsync();
     }
 }

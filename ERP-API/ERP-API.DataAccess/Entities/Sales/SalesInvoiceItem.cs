@@ -11,7 +11,6 @@ namespace ERP_API.DataAccess.Entities.Sales
     {
         public int Id { get; set; }
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal SellingPrice { get; set; } // Per unit
         public decimal Total { get; set; } // Auto-calculated
 

@@ -12,7 +12,6 @@ namespace ERP_API.Application.DTOs.Purchasing.PurchaseReturn
         public string ProductCode { get; set; } = default!; 
         public string ProductName { get; set; } = default!;
         public int Quantity { get; set; }
-        public int UnitCount { get; set; } 
         public decimal UnitPrice { get; set; } 
         public decimal Total { get; set; } 
     }

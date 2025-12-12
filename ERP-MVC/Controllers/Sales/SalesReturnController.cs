@@ -1,128 +1,79 @@
-﻿using ERP_MVC.Models.DTOs.Sales;
+﻿using ERP_MVC.Models.DTOs.Common;
+using ERP_MVC.Models.DTOs.Sales;
 using ERP_MVC.Services.Sales;
-using ERP_MVC.Services.Customers;
-using ERP_MVC.Services.Warehouse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ERP_MVC.Controllers.Sales
 {
     [Authorize]
     public class SalesReturnController : Controller
     {
-        private readonly SalesReturnService _returnService;
-        private readonly CustomerService _customerService;
-        private readonly WarehouseService _warehouseService;
+        private readonly SalesReturnService _service;
+        private readonly HttpClient _api;
 
-        public SalesReturnController(
-            SalesReturnService returnService,
-            CustomerService customerService,
-            WarehouseService warehouseService)
+        public SalesReturnController(SalesReturnService service, IHttpClientFactory http)
         {
-            _returnService = returnService;
-            _customerService = customerService;
-            _warehouseService = warehouseService;
+            _service = service;
+            _api = http.CreateClient("AuthorizedApiClient");
         }
 
-        // GET: Sales Returns List
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var returns = await _returnService.GetAllReturnsAsync();
-            return View("~/Views/Sales/return/Index.cshtml", returns);
+            var list = await _service.GetAllReturnsAsync();
+            return View(list);
         }
 
-        // GET: Return Details
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
-        {
-            var returnEntity = await _returnService.GetReturnByIdAsync(id);
-
-            if (returnEntity == null)
-                return NotFound();
-
-            return View(returnEntity);
-        }
-
-        // GET: Create Return Form (without invoice)
-        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            await PopulateDropdowns();
-            return View("~/Views/Sales/return/Create.cshtml", new CreateSalesReturnDto());
+            return View(new CreateSalesReturnDto
+            {
+                Items = new List<SalesReturnItemDto> { new SalesReturnItemDto() }
+            });
         }
 
-        // POST: Create Return
         [HttpPost]
-        public async Task<IActionResult> Create(CreateSalesReturnDto dto)
+        public async Task<IActionResult> Create(CreateSalesReturnDto model)
         {
-            if (!ModelState.IsValid)
+            model.Items = model.Items.Where(x => x.ProductPackageId > 0).ToList();
+
+            if (!ModelState.IsValid || model.Items.Count == 0)
             {
-                await PopulateDropdowns();
-                return View("~/Views/Sales/return/Create.cshtml", dto);
+                return View(model);
             }
 
-            bool success = await _returnService.CreateReturnAsync(dto);
+            var result = await _service.CreateReturnAsync(model);
 
-            if (success)
+            if (result.Success)
             {
-                TempData["SuccessMessage"] = "Sales return created successfully!";
-                return RedirectToAction("Index");
+                TempData["SuccessMessage"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
 
-            await PopulateDropdowns();
-            ModelState.AddModelError("", "Error creating sales return. Please try again.");
-            return View("~/Views/Sales/return/Create.cshtml", dto);
+            TempData["ErrorMessage"] = result.Message;
+            return View(model);
         }
 
-        // POST: Delete Return
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        // AJAX
+        public async Task<IActionResult> GetProducts()
         {
-            bool success = await _returnService.DeleteReturnAsync(id);
-
-            if (success)
-                TempData["SuccessMessage"] = "Sales return deleted successfully!";
-            else
-                TempData["ErrorMessage"] = "Error deleting sales return.";
-
-            return RedirectToAction("Index");
+            return Json(await _api.GetFromJsonAsync<List<ProductSimpleDto>>("api/Products"));
         }
 
-        // AJAX: Get Products (no stock check needed for returns)
-        [HttpGet]
-        public async Task<JsonResult> GetProductsByWarehouse(int warehouseId)
+        public async Task<IActionResult> GetVariations(int productId)
         {
-            var stockItems = await _warehouseService.GetWarehouseStock(warehouseId);
-
-            var formattedItems = stockItems.Select(s => new
-            {
-                id = s.ProductPackageId,
-                name = $"{s.ProductName}" +
-                       (!string.IsNullOrEmpty(s.VariationName) ? $" - {s.VariationName}" : "") +
-                       $" ({s.PackageName})"
-            });
-
-            return Json(formattedItems);
+            return Json(await _api.GetFromJsonAsync<List<VariationSimpleDto>>($"api/Products/{productId}/Variations"));
         }
 
-        private async Task PopulateDropdowns()
+        public async Task<IActionResult> GetPackages(int variationId)
         {
-            var customers = await _customerService.GetAllCustomersAsync();
-            var warehouses = await _warehouseService.GetAllWarehouses();
+            return Json(await _api.GetFromJsonAsync<ProductPackageDto>($"api/Products/Variations/{variationId}/Packages"));
+        }
 
-            ViewBag.CustomerList = customers.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.CustomerName
-            });
-
-            ViewBag.WarehouseList = warehouses.Select(w => new SelectListItem
-            {
-                Value = w.Id.ToString(),
-                Text = w.Name
-            });
+        public async Task<IActionResult> GetProductPackages()
+        {
+            var data = await _api.GetFromJsonAsync<List<ProductPackageSimpleDto>>("api/Products/ProductPackages");
+            return Json(data);
         }
     }
 }

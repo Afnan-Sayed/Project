@@ -56,5 +56,14 @@ namespace ERP_API.API.Controllers
 
             return Ok(product);
         }
+
+        [HttpGet("ProductPackages")]
+        public async Task<IActionResult> GetAllProductPackages()
+        {
+            var packages = await _productService.GetAllProductPackagesAsync();
+            return Ok(packages);
+        }
+
+
     }
 }

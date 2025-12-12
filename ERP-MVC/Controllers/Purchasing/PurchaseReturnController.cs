@@ -1,166 +1,98 @@
-﻿using ERP_MVC.Models.DTOs.Finance;
+﻿using ERP_MVC.Models.DTOs.Common;
 using ERP_MVC.Models.DTOs.Purchasing;
 using ERP_MVC.Services.Purchasing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Text.Json;
 
-namespace ERP_MVC.Controllers
+namespace ERP_MVC.Controllers.Purchasing
 {
+    [Authorize]
     public class PurchaseReturnController : Controller
     {
-        private readonly PurchaseReturnService _purchaseReturnService;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly PurchaseReturnService _service;
+        private readonly HttpClient _api;
 
-        public PurchaseReturnController(
-            PurchaseReturnService purchaseReturnService,
-            IHttpClientFactory httpClientFactory)
+        public PurchaseReturnController(PurchaseReturnService service, IHttpClientFactory http)
         {
-            _purchaseReturnService = purchaseReturnService;
-            _httpClientFactory = httpClientFactory;
+            _service = service;
+            _api = http.CreateClient("AuthorizedApiClient");
         }
 
-        // GET: /PurchaseReturn/Index
         public async Task<IActionResult> Index()
         {
-            var returns = await _purchaseReturnService.GetAllReturnsAsync();
-            return View("~/Views/Purchasing/return/Index.cshtml", returns);
+            var list = await _service.GetAllReturnsAsync();
+            return View(list);
         }
 
-        // GET: /PurchaseReturn/Create
         public async Task<IActionResult> Create()
         {
-            await LoadDropdownsAsync();
-
-            var model = new CreatePurchaseReturnDto
+            await LoadSuppliers();
+            return View(new CreatePurchaseReturnDto
             {
-                ReturnDate = DateTime.Now,
-                Items = new List<PurchaseReturnItemDto>()
-            };
-
-            return View("~/Views/Purchasing/invoice/Create.cshtml", model);
+                Items = new List<PurchaseReturnItemDto> { new PurchaseReturnItemDto() }
+            });
         }
 
-        // POST: /PurchaseReturn/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePurchaseReturnDto model)
         {
-            // Remove empty items
-            model.Items = model.Items.Where(i => i.ProductPackageId > 0).ToList();
+            model.Items = model.Items.Where(x => x.ProductPackageId > 0).ToList();
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || model.Items.Count == 0)
             {
-                await LoadDropdownsAsync();
-                return View(model);
+                await LoadSuppliers();
+                return View();
             }
 
-            var result = await _purchaseReturnService.CreateReturnAsync(model);
+            var result = await _service.CreateReturnAsync(model);
 
-            if (result)
+            if (result.Success)
             {
-                TempData["SuccessMessage"] = "Purchase Return created successfully!";
+                TempData["SuccessMessage"] = result.Message;
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["ErrorMessage"] = "Failed to create purchase return. Please try again.";
-            await LoadDropdownsAsync();
-            return View("~/Views/Purchasing/invoice/Create.cshtml", model);
+            TempData["ErrorMessage"] = result.Message;
+            await LoadSuppliers();
+            return View();
         }
 
-        // GET: /PurchaseReturn/Details/5
-        public async Task<IActionResult> Details(int id)
+        private async Task LoadSuppliers()
         {
-            var returnData = await _purchaseReturnService.GetReturnByIdAsync(id);
+            var response = await _api.GetFromJsonAsync<SupplierResponse>("api/Supplier");
+            var suppliers = response?.Data ?? new List<SupplierSimpleDto>();
 
-            if (returnData == null)
+            ViewBag.SupplierList = suppliers.Select(s => new SelectListItem
             {
-                TempData["ErrorMessage"] = "Return not found.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(returnData);
+                Value = s.Id.ToString(),
+                Text = s.SupplierName
+            }).ToList();
         }
 
-        // POST: /PurchaseReturn/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        // AJAX for dropdowns
+        public async Task<IActionResult> GetProducts()
         {
-            var result = await _purchaseReturnService.DeleteReturnAsync(id);
-
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Return deleted successfully!";
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Failed to delete return.";
-            }
-
-            return RedirectToAction(nameof(Index));
+            var result = await _api.GetFromJsonAsync<List<ProductSimpleDto>>("api/Products");
+            return Json(result);
         }
 
-        // Helper Method
-        private async Task LoadDropdownsAsync()
+        public async Task<IActionResult> GetVariations(int productId)
         {
-            var client = _httpClientFactory.CreateClient();
-            client.BaseAddress = new Uri("https://localhost:7052/api/");
+            var result = await _api.GetFromJsonAsync<List<VariationSimpleDto>>($"api/Products/{productId}/Variations");
+            return Json(result);
+        }
 
-            var token = User.FindFirst("jwt")?.Value;
-            if (!string.IsNullOrEmpty(token))
-            {
-                client.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            }
+        public async Task<IActionResult> GetPackages(int variationId)
+        {
+            var result = await _api.GetFromJsonAsync<ProductPackageDto>($"api/Products/Variations/{variationId}/Packages");
+            return Json(result);
+        }
 
-            // Load Suppliers
-            try
-            {
-                var suppliersResponse = await client.GetAsync("Suppliers");
-                if (suppliersResponse.IsSuccessStatusCode)
-                {
-                    var json = await suppliersResponse.Content.ReadAsStringAsync();
-                    var suppliers = JsonSerializer.Deserialize<List<SupplierDto>>(json, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-
-                    ViewBag.SupplierList = suppliers?.Select(s => new SelectListItem
-                    {
-                        Value = s.Id.ToString(),
-                        Text = s.SupplierName
-                    }).ToList() ?? new List<SelectListItem>();
-                }
-            }
-            catch
-            {
-                ViewBag.SupplierList = new List<SelectListItem>();
-            }
-
-            // Load Products
-            try
-            {
-                var productsResponse = await client.GetAsync("ProductPackages");
-                if (productsResponse.IsSuccessStatusCode)
-                {
-                    var json = await productsResponse.Content.ReadAsStringAsync();
-                    var products = JsonSerializer.Deserialize<List<ProductPackageDto>>(json, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-
-                    ViewBag.ProductList = products?.Select(p => new SelectListItem
-                    {
-                        Value = p.Id.ToString(),
-                        Text = $"{p.ProductCode} - {p.ProductName}"
-                    }).ToList() ?? new List<SelectListItem>();
-                }
-            }
-            catch
-            {
-                ViewBag.ProductList = new List<SelectListItem>();
-            }
+        public async Task<IActionResult> GetProductPackages()
+        {
+            var data = await _api.GetFromJsonAsync<List<ProductPackageSimpleDto>>("api/Products/ProductPackages");
+            return Json(data);
         }
     }
 }

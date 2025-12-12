@@ -73,6 +73,18 @@ namespace ERP_MVC.Controllers.User
                 var claims = loginResult.Claims.Select(c => new Claim(c.Type, c.Value)).ToList();
                 claims.Add(new Claim("jwt", loginResult.TokenResult.Token));
 
+
+                //NEW
+                Response.Cookies.Append("JWT", loginResult.TokenResult.Token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddHours(6)
+                });
+                // ********************************
+
+
                 var scheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 var claimsIdentity = new ClaimsIdentity(claims, scheme);
 

@@ -19,7 +19,6 @@ namespace ERP_MVC.Models.DTOs.Purchasing
     {
         public int ProductPackageId { get; set; }
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal UnitPrice { get; set; }
     }
 
@@ -47,7 +46,6 @@ namespace ERP_MVC.Models.DTOs.Purchasing
         public string ProductCode { get; set; } = default!;
         public string ProductName { get; set; } = default!;
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Total { get; set; }
     }
@@ -77,7 +75,6 @@ namespace ERP_MVC.Models.DTOs.Purchasing
     {
         public int ProductPackageId { get; set; }
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal UnitPrice { get; set; }
     }
 
@@ -98,7 +95,6 @@ namespace ERP_MVC.Models.DTOs.Purchasing
         public string ProductCode { get; set; } = default!;
         public string ProductName { get; set; } = default!;
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Total { get; set; }
     }

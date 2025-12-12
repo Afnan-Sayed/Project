@@ -54,7 +54,8 @@ namespace ERP_API.Application.Services.Purchasing
                 if (productPackage == null)
                     throw new Exception($"Product package {itemDto.ProductPackageId} not found");
 
-                var itemTotal = itemDto.Quantity * itemDto.UnitPrice;
+                var itemTotal = itemDto.Quantity* itemDto.UnitPrice;
+               
                 totalAmount += itemTotal;
 
                 invoiceItems.Add(new PurchaseInvoiceItem
@@ -65,11 +66,12 @@ namespace ERP_API.Application.Services.Purchasing
                     Total = itemTotal
                 });
 
+
                 // Update inventory - increase stock
-                UpdateInventoryAsync(itemDto.ProductPackageId, itemDto.Quantity, itemDto.UnitPrice);
+                await UpdateInventoryAsync(itemDto.ProductPackageId, itemDto.Quantity, itemDto.UnitPrice);
 
                 // Update average purchase price
-                UpdateAveragePurchasePriceAsync(productPackage, itemDto.Quantity, itemDto.UnitPrice);
+                await UpdateAveragePurchasePriceAsync(productPackage, itemDto.Quantity, itemDto.UnitPrice);
             }
 
             // Calculate net amount after discount
@@ -88,10 +90,10 @@ namespace ERP_API.Application.Services.Purchasing
                 InvoiceNumber = invoiceNumber,
                 InvoiceDate = dto.InvoiceDate,
                 SupplierId = dto.SupplierId,
-                //UserId = userId,
+                //CreatedByUser = appUser.UserName, //maintenance: store user info
                 TotalAmount = totalAmount,
                 NetAmount = netAmount,
-                Discount = dto.Discount,
+                Discount = dto.Discount ?? 0, //maintenance: handle null
                 PaymentOrderAmount = dto.PaymentOrderAmount,
                 BalanceBefore = balanceBefore,
                 BalanceAfter = balanceAfter,
@@ -214,7 +216,7 @@ namespace ERP_API.Application.Services.Purchasing
             // Reverse inventory changes
             foreach (var item in invoice.Items)
             {
-                UpdateInventoryAsync(item.ProductPackageId, -item.Quantity, item.PurchasePrice);
+                await UpdateInventoryAsync(item.ProductPackageId, -item.Quantity, item.PurchasePrice);
             }
 
             await _unitOfWork.PurchaseInvoices.DeleteAsync(id);
@@ -223,7 +225,7 @@ namespace ERP_API.Application.Services.Purchasing
         }
 
         // Helper methods
-        private async void UpdateInventoryAsync(int productPackageId, int quantity, decimal purchasePrice)
+        private async Task UpdateInventoryAsync(int productPackageId, int quantity, decimal purchasePrice)
         {
             // Find main warehouse
             var mainWarehouse = _unitOfWork.Warehouses
@@ -256,7 +258,8 @@ namespace ERP_API.Application.Services.Purchasing
             }
         }
 
-        private async void UpdateAveragePurchasePriceAsync(ProductPackage productPackage, int quantity, decimal purchasePrice)
+        //maintenance: consider concurrency issues, so i used async Task instead of void
+        private async Task UpdateAveragePurchasePriceAsync(ProductPackage productPackage, int quantity, decimal purchasePrice)
         {
             var currentStock = _unitOfWork.WarehouseStocks
                 .GetAllQueryable()

@@ -13,7 +13,6 @@ namespace ERP_API.Application.DTOs.Sales.SalesInvoice
         public string ProductName { get; set; } = default!;
         public string PackageTypeName { get; set; } = string.Empty;
         public int Quantity { get; set; } 
-        public int UnitCount { get; set; }
         public decimal SellingPrice { get; set; }
         public decimal Total { get; set; }
     }

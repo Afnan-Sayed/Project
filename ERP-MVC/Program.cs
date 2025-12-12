@@ -9,6 +9,7 @@ using ERP_MVC.Services.Suppliers;
 using ERP_MVC.Services.User;
 using ERP_MVC.Services.Warehouse;
 using Microsoft.AspNetCore.Authentication.Cookies;        // For WarehouseService   
+using ERP_MVC.Services.Common;
 
 namespace ERP_MVC
 {
@@ -18,8 +19,25 @@ namespace ERP_MVC
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            
+
             builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddHttpClient<WarehouseService>().AddHttpMessageHandler<AuthHeaderHandler>();
+
+            // ======================================================
+            // 1) AuthHeaderHandler فقط لخدمات Purchasing + Sales
+            // ======================================================
+            builder.Services.AddTransient<AuthHeaderHandler>();
+
+            // HttpClient خاص فقط بخدمات Purchasing/Sales
+            builder.Services.AddHttpClient("AuthorizedApiClient", client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BaseUrl"]);
+            })
+            .AddHttpMessageHandler<AuthHeaderHandler>();    
+
+
 
             var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
 
@@ -72,23 +90,13 @@ namespace ERP_MVC
                 client.BaseAddress = new Uri(apiBaseUrl);
             });
 
-            builder.Services.AddHttpClient<PurchaseInvoiceService>(client =>
-            {
-                client.BaseAddress = new Uri(apiBaseUrl);
-            });
-            builder.Services.AddHttpClient<PurchaseReturnService>(client =>
-            {
-                client.BaseAddress = new Uri(apiBaseUrl);
-            });
-            builder.Services.AddHttpClient<SalesInvoiceService>(client =>
-            {
-                client.BaseAddress = new Uri(apiBaseUrl);
-            });
-            builder.Services.AddHttpClient<SalesReturnService>(client =>
-            {
-                client.BaseAddress = new Uri(apiBaseUrl);
-            });
-
+            // ======================================================
+            // 3) خدمات Purchasing + Sales — تستخدم AuthorizedApiClient فقط
+            // ======================================================
+            builder.Services.AddScoped<PurchaseInvoiceService>();
+            builder.Services.AddScoped<PurchaseReturnService>();
+            builder.Services.AddScoped<SalesInvoiceService>();
+            builder.Services.AddScoped<SalesReturnService>();
 
 
             builder.Services.AddAuthentication(options =>
@@ -110,7 +118,7 @@ namespace ERP_MVC
 
             var app = builder.Build();
 
-           
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -119,10 +127,11 @@ namespace ERP_MVC
             }
 
             app.UseHttpsRedirection();
+            
+
+
             app.UseRouting();
-
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             // New .NET 9 Static Assets feature

@@ -1,0 +1,175 @@
+﻿@using ERP_MVC.Models.DTOs.Sales
+@model CreateSalesInvoiceDto
+
+<div class="row mt-3">
+    <div class="col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between mb-3">
+                    <h5>Add New Sales Invoice</h5>
+                    <a asp-action="Index" class="btn btn-secondary btn-sm">
+                        <i class="fa fa-arrow-left"></i> Back
+                    </a>
+                </div>
+
+                <form asp-action="Create" method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <!-- Invoice Info -->
+                    <h6 class="text-muted mb-3">Invoice Information</h6>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label>Customer</label>
+                            <select asp-for="CustomerId"
+                                    asp-items="@(ViewBag.CustomerList as List<SelectListItem>)"
+                                    class="form-control" required>
+                                <option value="">-- Select Customer --</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Date</label>
+                            <input asp-for="InvoiceDate" type="date" class="form-control" required />
+                        </div>
+
+                    </div>
+
+                    <!-- Products -->
+                    <h6 class="text-muted mt-4 mb-2">Products</h6>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width:300px;">Product</th>
+                                <th style="width:120px;">Qty</th>
+                                <th style="width:120px;">Price</th>
+                                <th style="width:120px;">Total</th>
+                                <th style="width:60px;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="products-body">
+
+                            <tr class="product-row" data-index="0">
+
+                                <td>
+
+                                    <!-- PRODUCTPACKAGE -->
+                                    <select name="Items[0].ProductPackageId"
+                                            class="form-control product-package-select"
+                                            required>
+                                        <option value="">Select Package</option>
+                                    </select>
+
+                                </td>
+
+                                <td>
+                                    <input name="Items[0].Quantity"
+                                           type="number"
+                                           class="form-control quantity"
+                                           min="1"
+                                           value="1"
+                                           required />
+                                </td>
+
+                                <td>
+                                    <input name="Items[0].SellingPrice"
+                                           type="number"
+                                           class="form-control price"
+                                           min="0"
+                                           step="0.01"
+                                           value="0"
+                                           required />
+                                </td>
+
+                                <td>
+                                    <input class="form-control total" readonly value="0.00" />
+                                </td>
+
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-danger btn-sm remove-row">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <button type="button" id="add-product" class="btn btn-outline-primary">
+                        + Add Product
+                    </button>
+
+                    <!-- Totals -->
+                    <h6 class="text-muted mt-4">Totals</h6>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <label>Total</label>
+                            <input id="total-amount-display"
+                                   class="form-control"
+                                   readonly value="0.00" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label>Discount</label>
+                            <input asp-for="Discount"
+                                   id="discount"
+                                   type="number"
+                                   min="0"
+                                   step="0.01"
+                                   class="form-control"
+                                   value="0" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label>Net</label>
+                            <input id="net-amount-display"
+                                   class="form-control"
+                                   readonly value="0.00" />
+                        </div>
+
+                    </div>
+
+                    <!-- Amount Received -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label>Amount Received (optional)</label>
+                            <input asp-for="AmountReceived"
+                                   class="form-control"
+                                   type="number"
+                                   value="0"
+                                   step="0.01" />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex justify-content-end">
+                        <button class="btn btn-success px-5">
+                            <i class="fa fa-check me-2"></i> Create Invoice
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/product-selector.js"></script>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>Swal.fire('Success', '@TempData["SuccessMessage"]', 'success');</script>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>Swal.fire('Error', '@TempData["ErrorMessage"]', 'error');</script>
+}

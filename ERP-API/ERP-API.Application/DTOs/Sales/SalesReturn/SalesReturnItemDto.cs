@@ -9,8 +9,7 @@ namespace ERP_API.Application.DTOs.Sales.SalesReturn
     public class SalesReturnItemDto
     {
         public int ProductPackageId { get; set; } 
-        public int Quantity { get; set; } 
-        public int UnitCount { get; set; }
+        public int Quantity { get; set; }
         public decimal Price { get; set; }
     }
 }

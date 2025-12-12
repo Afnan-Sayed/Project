@@ -1,5 +1,5 @@
 ﻿@{
-    var title = ViewData["Title"] ?? "MyApp";
+    var title = ViewData["Title"] ?? "Axis One";
 }
 
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>@title - MyApp</title>
+    <title>@title - Axis One</title>
 
     <!-- Loader -->
     <link href="~/assets/css/pace.min.css" rel="stylesheet" />
@@ -173,11 +173,11 @@
                 <!-- Procurement -->
                 <li>
                     <a href="javascript:void();" class="has-arrow">
-                        <i class="fa-solid fa-cart-shopping"></i> <span>Procurement</span>
+                        <i class="fa-solid fa-cart-shopping"></i> <span>Purchasing</span>
                     </a>
                     <ul class="submenu-angle">
-                        <li><a asp-controller="PurchaseInvoice" asp-action="Index">Purchase Orders</a></li>
-                        <li><a asp-controller="PurchaseInvoice" asp-action="Create">New Purchase</a></li>
+                        <li><a asp-controller="PurchaseInvoice" asp-action="Create">New Purchase Invoice</a></li>
+                        <li><a asp-controller="PurchaseInvoice" asp-action="Index">Purchase Invoice List</a></li>
                         <li><a asp-controller="PurchaseReturn" asp-action="Create">Purchase Return</a></li>
                         <li><a asp-controller="PurchaseReturn" asp-action="Index">Purchase Return List</a></li>
                     </ul>
@@ -186,11 +186,11 @@
                 <!-- Sales Department -->
                 <li>
                     <a href="javascript:void();" class="has-arrow">
-                        <i class="zmdi zmdi-trending-up"></i> <span>Sales Department</span>
+                        <i class="zmdi zmdi-trending-up"></i> <span>Sales</span>
                     </a>
                     <ul class="submenu-angle">
-                        <li><a asp-controller="SalesInvoice" asp-action="Index">Sales Orders</a></li>
-                        <li><a asp-controller="SalesInvoice" asp-action="Create">New Sale</a></li>
+                        <li><a asp-controller="SalesInvoice" asp-action="Create">New Sale Invoice</a></li>
+                        <li><a asp-controller="SalesInvoice" asp-action="Index">Sale Invoice List</a></li>
                         <li><a asp-controller="SalesReturn" asp-action="Create">Sales Return</a></li>
                         <li><a asp-controller="SalesReturn" asp-action="Index">Sales Return List</a></li>
                     </ul>
@@ -283,7 +283,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="container text-center">
-                <span class="text-white">© 2025 MyApp. All Rights Reserved.</span>
+                <span class="text-white">© 2025 Axis One. All Rights Reserved.</span>
             </div>
         </footer>
 

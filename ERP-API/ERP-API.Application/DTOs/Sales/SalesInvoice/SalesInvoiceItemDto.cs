@@ -10,8 +10,7 @@ namespace ERP_API.Application.DTOs.Sales.SalesInvoice
     {
         public int ProductPackageId { get; set; } 
         public int Quantity { get; set; } 
-        public int UnitCount { get; set; } 
         public decimal SellingPrice { get; set; }//per unit
-        //total= Quantity* UnitCount *SellingPrice -> auto-calculated
+        //total= Quantity *SellingPrice -> auto-calculated
     }
 }

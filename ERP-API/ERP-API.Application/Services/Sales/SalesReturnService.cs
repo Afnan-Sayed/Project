@@ -49,7 +49,7 @@ namespace ERP_API.Application.Services.Sales
                 if (productPackage == null)
                     throw new Exception($"Product package {itemDto.ProductPackageId} not found");
 
-                var itemTotal = itemDto.Quantity * itemDto.UnitCount * itemDto.Price;
+                var itemTotal = itemDto.Quantity * itemDto.Price;
                 totalAmount += itemTotal;
 
                 returnItems.Add(new SalesReturnItem
@@ -61,8 +61,8 @@ namespace ERP_API.Application.Services.Sales
                 });
 
                 // Increase inventory (customer returned = increase our stock)
-                var totalQuantityToAdd = itemDto.Quantity * itemDto.UnitCount;
-                UpdateInventory(itemDto.ProductPackageId, totalQuantityToAdd);
+                var totalQuantityToAdd = itemDto.Quantity;
+                await UpdateInventoryAsync(itemDto.ProductPackageId, totalQuantityToAdd);
             }
 
             // Create return
@@ -90,6 +90,11 @@ namespace ERP_API.Application.Services.Sales
             };
 
             await _unitOfWork.CustomerTransactions.CreateAsync(customerTransaction);
+
+
+            //maintence:update customer balance 
+            customer.TotalBalance -= (int)salesReturn.TotalAmount;
+            _unitOfWork.Customers.Update(customer);
 
             await _unitOfWork.SaveChangesAsync();
 
@@ -124,7 +129,6 @@ namespace ERP_API.Application.Services.Sales
                     ProductCode = item.ProductPackage.Barcode,
                     ProductName = item.ProductPackage.ProductVariation.Product.Name,
                     Quantity = item.Quantity,
-                    UnitCount = 1, 
                     Price = item.Price,
                     Total = item.Total
                 }).ToList()
@@ -178,7 +182,7 @@ namespace ERP_API.Application.Services.Sales
             // Reverse inventory changes
             foreach (var item in returnEntity.Items)
             {
-                UpdateInventory(item.ProductPackageId, -item.Quantity);
+                await UpdateInventoryAsync(item.ProductPackageId, -item.Quantity);
             }
 
             await _unitOfWork.SalesReturns.DeleteAsync(id);
@@ -186,7 +190,7 @@ namespace ERP_API.Application.Services.Sales
             return true;
         }
 
-        private void UpdateInventory(int productPackageId, decimal quantityChange)
+        private async Task UpdateInventoryAsync(int productPackageId, decimal quantityChange)
         {
             var mainWarehouse = _unitOfWork.Warehouses
                 .GetAllQueryable()
@@ -208,7 +212,7 @@ namespace ERP_API.Application.Services.Sales
                     Quantity = quantityChange,
                     MinStockLevel = 0
                 };
-                _unitOfWork.WarehouseStocks.CreateAsync(stock);
+                await _unitOfWork.WarehouseStocks.CreateAsync(stock);
             }
             else if (stock != null)
             {

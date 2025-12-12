@@ -305,6 +305,26 @@ namespace ERP_API.Application.Services
             return $"800{variationId.ToString("D5")}";
         }
 
+
+        public async Task<List<ProductPackageListDto>> GetAllProductPackagesAsync()
+        {
+            return _unitOfWork.ProductPackages
+                .GetAllQueryable()
+                .Include(p => p.ProductVariation)
+                    .ThenInclude(v => v.Product)
+                .Include(p => p.PackageType)
+                .Select(p => new ProductPackageListDto
+                {
+                    Id = p.Id,
+                    ProductName = p.ProductVariation.Product.Name,
+                    PackageTypeName = p.PackageType.Name,
+                    PurchasePrice = p.PurchasePrice,
+                    SalesPrice = p.SalesPrice,
+                    Barcode = p.Barcode
+                })
+                .ToList();
+        }
+
         // --- Repository Accessors ---
         private IBaseRepository<Product, int> productRepo => _unitOfWork.Products;
         private IBaseRepository<ProductVariation, int> variationRepo => _unitOfWork.ProductVariations;

@@ -43,7 +43,7 @@ namespace ERP_API.Application.Services.Sales
             foreach (var itemDto in dto.Items)
             {
                 var availableStock = GetAvailableStock(itemDto.ProductPackageId);
-                var requiredQuantity = itemDto.Quantity * itemDto.UnitCount;
+                var requiredQuantity = itemDto.Quantity;
 
                 if (availableStock < requiredQuantity)
                     throw new Exception($"Insufficient stock for product package {itemDto.ProductPackageId}. Available: {availableStock}, Required: {requiredQuantity}");
@@ -59,24 +59,23 @@ namespace ERP_API.Application.Services.Sales
                 if (productPackage == null)
                     throw new Exception($"Product package {itemDto.ProductPackageId} not found");
 
-                var itemTotal = itemDto.Quantity * itemDto.UnitCount * itemDto.SellingPrice;
+                var itemTotal = itemDto.Quantity * itemDto.SellingPrice;
                 totalAmount += itemTotal;
 
                 invoiceItems.Add(new SalesInvoiceItem
                 {
                     ProductPackageId = itemDto.ProductPackageId,
                     Quantity = itemDto.Quantity,
-                    UnitCount = itemDto.UnitCount,
                     SellingPrice = itemDto.SellingPrice,
                     Total = itemTotal
                 });
 
                 // Update inventory - decrease stock
-                var totalQuantityToDeduct = itemDto.Quantity * itemDto.UnitCount;
-                UpdateInventory(itemDto.ProductPackageId, -totalQuantityToDeduct);
+                var totalQuantityToDeduct = itemDto.Quantity;
+                await UpdateInventoryAsync(itemDto.ProductPackageId, -totalQuantityToDeduct);
 
                 // Update average selling price
-                UpdateAverageSellingPrice(productPackage, totalQuantityToDeduct, itemDto.SellingPrice);
+               await UpdateAverageSellingPriceAsync(productPackage, totalQuantityToDeduct, itemDto.SellingPrice);
             }
 
             // Calculate net amount after discount
@@ -98,7 +97,7 @@ namespace ERP_API.Application.Services.Sales
                 //UserId = userId,
                 TotalAmount = totalAmount,
                 NetAmount = netAmount,
-                Discount = dto.Discount,
+                Discount = dto.Discount ??0,
                 AmountReceived = dto.AmountReceived,
                 BalanceBefore = balanceBefore,
                 BalanceAfter = balanceAfter,
@@ -120,7 +119,7 @@ namespace ERP_API.Application.Services.Sales
             await _unitOfWork.CustomerTransactions.CreateAsync(customerTransaction);
 
             // Update customer balance
-            customer.TotalBalance = (int)balanceAfter;
+            customer.TotalBalance = balanceAfter; //maintenance: keep balance as decimal
             _unitOfWork.Customers.Update(customer);
            
             await _unitOfWork.SaveChangesAsync();
@@ -165,7 +164,6 @@ namespace ERP_API.Application.Services.Sales
                     ProductName = item.ProductPackage.ProductVariation.Product.Name,
                     PackageTypeName = item.ProductPackage.PackageType.Name,
                     Quantity = item.Quantity,
-                    UnitCount = item.UnitCount,
                     SellingPrice = item.SellingPrice,
                     Total = item.Total
                 }).ToList()
@@ -221,8 +219,8 @@ namespace ERP_API.Application.Services.Sales
             // Reverse inventory changes
             foreach (var item in invoice.Items)
             {
-                var totalQuantity = item.Quantity * item.UnitCount;
-                UpdateInventory(item.ProductPackageId, totalQuantity);
+                var totalQuantity = item.Quantity;
+                await UpdateInventoryAsync(item.ProductPackageId, totalQuantity);
             }
 
             await _unitOfWork.SalesInvoices.DeleteAsync(id);
@@ -239,7 +237,7 @@ namespace ERP_API.Application.Services.Sales
                 .Sum(s => s.Quantity);
         }
 
-        private void UpdateInventory(int productPackageId, decimal quantityChange)
+        private async Task UpdateInventoryAsync(int productPackageId, decimal quantityChange)
         {
             // Find main warehouse
             var mainWarehouse = _unitOfWork.Warehouses
@@ -264,7 +262,7 @@ namespace ERP_API.Application.Services.Sales
             _unitOfWork.WarehouseStocks.Update(stock);
         }
 
-        private void UpdateAverageSellingPrice(ProductPackage productPackage, decimal quantity, decimal sellingPrice)
+        private async Task UpdateAverageSellingPriceAsync(ProductPackage productPackage, decimal quantity, decimal sellingPrice)
         {
             var currentStock = _unitOfWork.WarehouseStocks
                 .GetAllQueryable()

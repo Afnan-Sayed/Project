@@ -780,8 +780,6 @@ namespace ERP_API.DataAccess.Migrations
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UnitCount")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

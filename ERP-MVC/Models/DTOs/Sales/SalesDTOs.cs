@@ -15,7 +15,6 @@
     {
         public int ProductPackageId { get; set; }
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal SellingPrice { get; set; }
     }
 
@@ -43,7 +42,6 @@
         public string ProductCode { get; set; } = default!;
         public string ProductName { get; set; } = default!;
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal SellingPrice { get; set; }
         public decimal Total { get; set; }
     }
@@ -73,7 +71,6 @@
     {
         public int ProductPackageId { get; set; }
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal Price { get; set; }
     }
 
@@ -94,7 +91,6 @@
         public string ProductCode { get; set; } = default!;
         public string ProductName { get; set; } = default!;
         public int Quantity { get; set; }
-        public int UnitCount { get; set; }
         public decimal Price { get; set; }
         public decimal Total { get; set; }
     }

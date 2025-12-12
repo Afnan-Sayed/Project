@@ -1,7 +1,6 @@
-﻿using ERP_MVC.Models.DTOs.Sales;
+﻿using ERP_MVC.Models.DTOs.Common;
+using ERP_MVC.Models.DTOs.Sales;
 using ERP_MVC.Services.Sales;
-using ERP_MVC.Services.Customers;
-using ERP_MVC.Services.Warehouse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,119 +10,86 @@ namespace ERP_MVC.Controllers.Sales
     [Authorize]
     public class SalesInvoiceController : Controller
     {
-        private readonly SalesInvoiceService _invoiceService;
-        private readonly CustomerService _customerService;
-        private readonly WarehouseService _warehouseService;
+        private readonly SalesInvoiceService _service;
+        private readonly HttpClient _api;
 
-        public SalesInvoiceController(
-            SalesInvoiceService invoiceService,
-            CustomerService customerService,
-            WarehouseService warehouseService)
+        public SalesInvoiceController(SalesInvoiceService service, IHttpClientFactory http)
         {
-            _invoiceService = invoiceService;
-            _customerService = customerService;
-            _warehouseService = warehouseService;
+            _service = service;
+            _api = http.CreateClient("AuthorizedApiClient");
         }
 
-        // GET: Sales Invoices List
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var invoices = await _invoiceService.GetAllInvoicesAsync();
-            return View("~/Views/Sales/invoice/Index.cshtml", invoices);
+            var list = await _service.GetAllInvoicesAsync();
+            return View(list);
         }
 
-        // GET: Invoice Details
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
-        {
-            var invoice = await _invoiceService.GetInvoiceByIdAsync(id);
-
-            if (invoice == null)
-                return NotFound();
-
-            return View(invoice);
-        }
-
-        // GET: Create Invoice Form
-        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            await PopulateDropdowns();
-            return View("~/Views/Sales/invoice/Create.cshtml", new CreateSalesInvoiceDto());
+            await LoadCustomers();
+            return View(new CreateSalesInvoiceDto
+            {
+                Items = new List<SalesInvoiceItemDto> { new SalesInvoiceItemDto() }
+            });
         }
 
-        // POST: Create Invoice
         [HttpPost]
-        public async Task<IActionResult> Create(CreateSalesInvoiceDto dto)
+        public async Task<IActionResult> Create(CreateSalesInvoiceDto model)
         {
-            if (!ModelState.IsValid)
+            model.Items = model.Items.Where(x => x.ProductPackageId > 0).ToList();
+
+            if (!ModelState.IsValid || model.Items.Count == 0)
             {
-                await PopulateDropdowns();
-                return View("~/Views/Sales/invoice/Create.cshtml", dto);
+                await LoadCustomers();
+                return View(model);
             }
 
-            bool success = await _invoiceService.CreateInvoiceAsync(dto);
+            var result = await _service.CreateInvoiceAsync(model);
 
-            if (success)
+            if (result.Success)
             {
-                TempData["SuccessMessage"] = "Sales invoice created successfully!";
-                return RedirectToAction("Index");
+                TempData["SuccessMessage"] = result.Message;
+                return RedirectToAction(nameof(Index));
             }
 
-            await PopulateDropdowns();
-            ModelState.AddModelError("", "Error creating sales invoice. Please try again.");
-            return View("~/Views/Sales/invoice/Create.cshtml", dto);
+            TempData["ErrorMessage"] = result.Message;
+            await LoadCustomers();
+            return View(model);
         }
 
-        // POST: Delete Invoice
-        [HttpPost]
-        public async Task<IActionResult> Delete(int id)
+        private async Task LoadCustomers()
         {
-            bool success = await _invoiceService.DeleteInvoiceAsync(id);
+            var response = await _api.GetFromJsonAsync<CustomerResponse>("api/Customer");
+            var customers = response?.Data ?? new List<CustomerSimpleDto>();
 
-            if (success)
-                TempData["SuccessMessage"] = "Sales invoice deleted successfully!";
-            else
-                TempData["ErrorMessage"] = "Error deleting sales invoice.";
-
-            return RedirectToAction("Index");
+            ViewBag.CustomerList = customers.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.CustomerName
+            }).ToList();
         }
 
-        // AJAX: Get Products by Warehouse with Stock
-        [HttpGet]
-        public async Task<JsonResult> GetProductsByWarehouse(int warehouseId)
+        // AJAX ENDPOINTS
+        public async Task<IActionResult> GetProducts()
         {
-            var stockItems = await _warehouseService.GetWarehouseStock(warehouseId);
-
-            var formattedItems = stockItems.Select(s => new
-            {
-                id = s.ProductPackageId,
-                name = $"{s.ProductName}" +
-                       (!string.IsNullOrEmpty(s.VariationName) ? $" - {s.VariationName}" : "") +
-                       $" ({s.PackageName})",
-                availableStock = s.Quantity
-            });
-
-            return Json(formattedItems);
+            return Json(await _api.GetFromJsonAsync<List<ProductSimpleDto>>("api/Products"));
         }
 
-        private async Task PopulateDropdowns()
+        public async Task<IActionResult> GetVariations(int productId)
         {
-            var customers = await _customerService.GetAllCustomersAsync();
-            var warehouses = await _warehouseService.GetAllWarehouses();
+            return Json(await _api.GetFromJsonAsync<List<VariationSimpleDto>>($"api/Products/{productId}/Variations"));
+        }
 
-            ViewBag.CustomerList = customers.Select(c => new SelectListItem
-            {
-                Value = c.Id.ToString(),
-                Text = c.CustomerName
-            });
+        public async Task<IActionResult> GetPackages(int variationId)
+        {
+            return Json(await _api.GetFromJsonAsync<ProductPackageDto>($"api/Products/Variations/{variationId}/Packages"));
+        }
 
-            ViewBag.WarehouseList = warehouses.Select(w => new SelectListItem
-            {
-                Value = w.Id.ToString(),
-                Text = w.Name
-            });
+        public async Task<IActionResult> GetProductPackages()
+        {
+            var data = await _api.GetFromJsonAsync<List<ProductPackageSimpleDto>>("api/Products/ProductPackages");
+            return Json(data);
         }
     }
 }

@@ -3551,23 +3551,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\YoussefEbrahimMostaf\\.nuget\\packages\\": {},
+    "C:\\Users\\afnan\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj",
+      "projectUniqueName": "C:\\Users\\afnan\\source\\repos\\Project\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj",
       "projectName": "ERP-API.Application",
-      "projectPath": "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj",
-      "packagesPath": "C:\\Users\\YoussefEbrahimMostaf\\.nuget\\packages\\",
-      "outputPath": "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.Application\\obj\\",
+      "projectPath": "C:\\Users\\afnan\\source\\repos\\Project\\ERP-API\\ERP-API.Application\\ERP-API.Application.csproj",
+      "packagesPath": "C:\\Users\\afnan\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\afnan\\source\\repos\\Project\\ERP-API\\ERP-API.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\YoussefEbrahimMostaf\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\afnan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3582,8 +3582,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj": {
-              "projectPath": "E:\\DEPI\\ERP-with-dot-NET\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj"
+            "C:\\Users\\afnan\\source\\repos\\Project\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj": {
+              "projectPath": "C:\\Users\\afnan\\source\\repos\\Project\\ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj"
             }
           }
         }
@@ -3598,7 +3598,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0": {
@@ -3619,7 +3619,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
