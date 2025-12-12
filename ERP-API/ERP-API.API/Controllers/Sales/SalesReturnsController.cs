@@ -74,7 +74,6 @@ namespace ERP_API.API.Controllers.Sales
 
         /// Create new sales return (without invoice)
         [HttpPost]
-        [Authorize(Roles = "SystemManager,Accountant")]
         public async Task<IActionResult> Create([FromBody] CreateSalesReturnDto dto)
         {
             try
@@ -106,7 +105,6 @@ namespace ERP_API.API.Controllers.Sales
 
         /// Delete sales return
         [HttpDelete("{id}")]
-        [Authorize(Roles = "SystemManager")]
         public async Task<IActionResult> Delete(int id)
         {
             try

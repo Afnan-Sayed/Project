@@ -4,6 +4,7 @@ using ERP_MVC.Services.Sales;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ERP_MVC.Controllers.Sales
 {
@@ -39,6 +40,16 @@ namespace ERP_MVC.Controllers.Sales
         {
             model.Items = model.Items.Where(x => x.ProductPackageId > 0).ToList();
 
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+                TempData["ErrorMessage"] = string.Join(" | ", errors);
+                await LoadCustomers();
+                return View(model);
+            }
             if (!ModelState.IsValid || model.Items.Count == 0)
             {
                 await LoadCustomers();

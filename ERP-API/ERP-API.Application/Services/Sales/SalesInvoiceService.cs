@@ -121,9 +121,14 @@ namespace ERP_API.Application.Services.Sales
             // Update customer balance
             customer.TotalBalance = balanceAfter; //maintenance: keep balance as decimal
             _unitOfWork.Customers.Update(customer);
-           
-            await _unitOfWork.SaveChangesAsync();
-
+            try
+            {
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Save error: " + ex.GetBaseException().Message);
+            }
             return await GetInvoiceByIdAsync(invoice.Id)
                 ?? throw new Exception("Failed to retrieve created invoice");
         }

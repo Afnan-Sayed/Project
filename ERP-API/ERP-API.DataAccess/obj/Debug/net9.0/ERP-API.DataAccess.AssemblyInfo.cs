@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ERP-API.DataAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a280e3fb48e6a1175ce2437807886fa60b8c163e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bed4fef72204992dcc1ecffe1efbd741eeac8f89")]
 [assembly: System.Reflection.AssemblyProductAttribute("ERP-API.DataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ERP-API.DataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
