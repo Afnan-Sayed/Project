@@ -3,6 +3,7 @@ using ERP_MVC.Models.DTOs.Sales;
 using ERP_MVC.Services.Sales;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ERP_MVC.Controllers.Sales
 {
@@ -26,6 +27,7 @@ namespace ERP_MVC.Controllers.Sales
 
         public async Task<IActionResult> Create()
         {
+            await LoadCustomers();
             return View(new CreateSalesReturnDto
             {
                 Items = new List<SalesReturnItemDto> { new SalesReturnItemDto() }
@@ -39,6 +41,7 @@ namespace ERP_MVC.Controllers.Sales
 
             if (!ModelState.IsValid || model.Items.Count == 0)
             {
+                await LoadCustomers();
                 return View(model);
             }
 
@@ -51,6 +54,7 @@ namespace ERP_MVC.Controllers.Sales
             }
 
             TempData["ErrorMessage"] = result.Message;
+            await LoadCustomers();
             return View(model);
         }
 
@@ -74,6 +78,18 @@ namespace ERP_MVC.Controllers.Sales
         {
             var data = await _api.GetFromJsonAsync<List<ProductPackageSimpleDto>>("api/Products/ProductPackages");
             return Json(data);
+        }
+
+        private async Task LoadCustomers()
+        {
+            var response = await _api.GetFromJsonAsync<CustomerResponse>("api/Customer");
+            var customers = response?.Data ?? new List<CustomerSimpleDto>();
+
+            ViewBag.CustomerList = customers.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.CustomerName
+            }).ToList();
         }
     }
 }

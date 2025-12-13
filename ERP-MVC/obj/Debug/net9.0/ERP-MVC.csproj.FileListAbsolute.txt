@@ -1695,3 +1695,4 @@ C:\Users\afnan\source\repos\Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.pdb
 C:\Users\afnan\source\repos\Project\ERP-MVC\obj\Debug\net9.0\ERP-MVC.genruntimeconfig.cache
 C:\Users\afnan\source\repos\Project\ERP-MVC\obj\Debug\net9.0\ref\ERP-MVC.dll
 C:\Users\afnan\source\repos\Project\ERP-MVC\obj\Debug\net9.0\compressed\g1h9bh3bzg-{0}-s6r7z06egm-s6r7z06egm.gz
+C:\Users\afnan\source\repos\Project\ERP-MVC\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

@@ -31,8 +31,14 @@ namespace ERP_MVC.Services.Sales
         public async Task<(bool Success, string Message)> CreateInvoiceAsync(CreateSalesInvoiceDto dto)
         {
             var res = await _api.PostAsJsonAsync("api/SalesInvoices", dto);
-            if (res.IsSuccessStatusCode) return (true, "Invoice created successfully");
-            return (false, await res.Content.ReadAsStringAsync());
+
+            if (res.IsSuccessStatusCode)
+                return (true, "Sales invoice created successfully");
+
+            //read server error message
+            var error = await res.Content.ReadAsStringAsync();
+
+            return (false, error);
         }
 
         public async Task<bool> DeleteInvoiceAsync(int id)

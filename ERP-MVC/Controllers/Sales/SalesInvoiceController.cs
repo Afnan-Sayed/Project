@@ -42,16 +42,8 @@ namespace ERP_MVC.Controllers.Sales
 
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-                TempData["ErrorMessage"] = string.Join(" | ", errors);
-                await LoadCustomers();
-                return View(model);
-            }
-            if (!ModelState.IsValid || model.Items.Count == 0)
-            {
+                TempData["ErrorMessage"] = "Please fill all required fields";
+                TempData.Keep("ErrorMessage");
                 await LoadCustomers();
                 return View(model);
             }
@@ -64,11 +56,13 @@ namespace ERP_MVC.Controllers.Sales
                 return RedirectToAction(nameof(Index));
             }
 
+            
             TempData["ErrorMessage"] = result.Message;
+            TempData.Keep("ErrorMessage");
+
             await LoadCustomers();
             return View(model);
         }
-
         private async Task LoadCustomers()
         {
             var response = await _api.GetFromJsonAsync<CustomerResponse>("api/Customer");
