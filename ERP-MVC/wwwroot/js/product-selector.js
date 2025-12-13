@@ -54,7 +54,7 @@
             newRow.querySelector(".product-package-select").value = "";
 
             tbody.appendChild(newRow);
-            loadPackages(); // Reload list for new row
+            fillPackageDropdown(select, window.allPackages);
         });
 
         // REMOVE ROW
