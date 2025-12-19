@@ -3,8 +3,32 @@
   "WorkspaceRootPath": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CAD1F405-F104-40B6-A59B-99D453C2AA9B}|ERP-API\\ERP-API.Application\\ERP-API.Application.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-api\\erp-api.application\\services\\warehouse\\warehouseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CAD1F405-F104-40B6-A59B-99D453C2AA9B}|ERP-API\\ERP-API.Application\\ERP-API.Application.csproj|solutionrelative:erp-api\\erp-api.application\\services\\warehouse\\warehouseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9711559B-A10B-4C26-8C1A-06A10F927930}|ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-api\\erp-api.dataaccess\\migrations\\20251204144929_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9711559B-A10B-4C26-8C1A-06A10F927930}|ERP-API\\ERP-API.DataAccess\\ERP-API.DataAccess.csproj|solutionrelative:erp-api\\erp-api.dataaccess\\migrations\\20251204144929_init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-mvc\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|solutionrelative:erp-mvc\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-mvc\\services\\inventory\\product\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|solutionrelative:erp-mvc\\services\\inventory\\product\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-mvc\\views\\packagetypes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|solutionrelative:erp-mvc\\views\\packagetypes\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-mvc\\views\\packagetypes\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|solutionrelative:erp-mvc\\views\\packagetypes\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CAD1F405-F104-40B6-A59B-99D453C2AA9B}|ERP-API\\ERP-API.Application\\ERP-API.Application.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-api\\erp-api.application\\services\\inventory\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CAD1F405-F104-40B6-A59B-99D453C2AA9B}|ERP-API\\ERP-API.Application\\ERP-API.Application.csproj|solutionrelative:erp-api\\erp-api.application\\services\\inventory\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FF871A87-EA05-48A1-8978-B1821CE9AD26}|ERP-MVC\\ERP-MVC.csproj|d:\\courses\\depi\\.net_full_stack\\repo\\project\\erp-mvc\\views\\product\\productdetails.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -91,19 +115,93 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
-              "RelativeDocumentMoniker": "ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
-              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
-              "RelativeToolTip": "ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAADAAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-05T00:43:43.684Z",
+              "Title": "WarehouseService.cs",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.Application\\Services\\Warehouse\\WarehouseService.cs",
+              "RelativeDocumentMoniker": "ERP-API\\ERP-API.Application\\Services\\Warehouse\\WarehouseService.cs",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.Application\\Services\\Warehouse\\WarehouseService.cs",
+              "RelativeToolTip": "ERP-API\\ERP-API.Application\\Services\\Warehouse\\WarehouseService.cs",
+              "ViewState": "AgIAAFIAAAAAAAAAAAAcwEgAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T16:45:53.514Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "20251204144929_init.cs",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.DataAccess\\Migrations\\20251204144929_init.cs",
+              "RelativeDocumentMoniker": "ERP-API\\ERP-API.DataAccess\\Migrations\\20251204144929_init.cs",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.DataAccess\\Migrations\\20251204144929_init.cs",
+              "RelativeToolTip": "ERP-API\\ERP-API.DataAccess\\Migrations\\20251204144929_init.cs",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-14T16:43:46.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Program.cs",
+              "RelativeDocumentMoniker": "ERP-MVC\\Program.cs",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Program.cs",
+              "RelativeToolTip": "ERP-MVC\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-05T12:27:26.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ProductService.cs",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Services\\Inventory\\Product\\ProductService.cs",
+              "RelativeDocumentMoniker": "ERP-MVC\\Services\\Inventory\\Product\\ProductService.cs",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Services\\Inventory\\Product\\ProductService.cs",
+              "RelativeToolTip": "ERP-MVC\\Services\\Inventory\\Product\\ProductService.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAgwCkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-05T11:35:23.426Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\PackageTypes\\Details.cshtml",
+              "RelativeDocumentMoniker": "ERP-MVC\\Views\\PackageTypes\\Details.cshtml",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\PackageTypes\\Details.cshtml",
+              "RelativeToolTip": "ERP-MVC\\Views\\PackageTypes\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-05T11:34:09.213Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProductService.cs",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.Application\\Services\\Inventory\\ProductService.cs",
+              "RelativeDocumentMoniker": "ERP-API\\ERP-API.Application\\Services\\Inventory\\ProductService.cs",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.Application\\Services\\Inventory\\ProductService.cs",
+              "RelativeToolTip": "ERP-API\\ERP-API.Application\\Services\\Inventory\\ProductService.cs",
+              "ViewState": "AgIAAMwAAAAAAAAAAAA4wMsAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-05T11:05:08.644Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
+              "RelativeDocumentMoniker": "ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
+              "ToolTip": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
+              "RelativeToolTip": "ERP-MVC\\Views\\PackageTypes\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-05T00:43:43.684Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "ProductDetails.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\Product\\ProductDetails.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\Product\\ProductDetails.cshtml",
@@ -111,12 +209,11 @@
               "RelativeToolTip": "ERP-MVC\\Views\\Product\\ProductDetails.cshtml",
               "ViewState": "AgIAAFEAAAAAAAAAAAAAAGUAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-05T00:42:32.256Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T00:42:32.256Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\Product\\Details.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\Product\\Details.cshtml",
@@ -124,12 +221,11 @@
               "RelativeToolTip": "ERP-MVC\\Views\\Product\\Details.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-05T00:42:26.342Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T00:42:26.342Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\Product\\Index.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\Product\\Index.cshtml",
@@ -137,12 +233,11 @@
               "RelativeToolTip": "ERP-MVC\\Views\\Product\\Index.cshtml",
               "ViewState": "AgIAACEAAAAAAAAAAAAAAC4AAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-05T00:41:43.583Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T00:41:43.583Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 11,
               "Title": "UserManagementController.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.API\\Controllers\\User\\UserManagementController.cs",
               "RelativeDocumentMoniker": "ERP-API\\ERP-API.API\\Controllers\\User\\UserManagementController.cs",
@@ -150,12 +245,11 @@
               "RelativeToolTip": "ERP-API\\ERP-API.API\\Controllers\\User\\UserManagementController.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-05T00:32:18.469Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T00:32:18.469Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 10,
               "Title": "IUserManagementService.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.Application\\Interfaces\\User\\IUserManagementService.cs",
               "RelativeDocumentMoniker": "ERP-API\\ERP-API.Application\\Interfaces\\User\\IUserManagementService.cs",
@@ -163,12 +257,11 @@
               "RelativeToolTip": "ERP-API\\ERP-API.Application\\Interfaces\\User\\IUserManagementService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwA0AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-05T00:31:04.411Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T00:31:04.411Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "AccountService.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.Application\\Services\\User\\AccountService.cs",
               "RelativeDocumentMoniker": "ERP-API\\ERP-API.Application\\Services\\User\\AccountService.cs",
@@ -176,12 +269,11 @@
               "RelativeToolTip": "ERP-API\\ERP-API.Application\\Services\\User\\AccountService.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-05T00:30:32.628Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-05T00:30:32.628Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 14,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\Shared\\_Layout.cshtml",
@@ -193,7 +285,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 13,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\InventoryAdjustment\\Index.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\InventoryAdjustment\\Index.cshtml",
@@ -201,12 +293,11 @@
               "RelativeToolTip": "ERP-MVC\\Views\\InventoryAdjustment\\Index.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-12-04T19:16:51.306Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-04T19:16:51.306Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "Create.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\InventoryAdjustment\\Create.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\InventoryAdjustment\\Create.cshtml",
@@ -218,7 +309,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "CreateAdjustmentDto.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Models\\DTOs\\InventoryAdjustment\\CreateAdjustmentDto.cs",
               "RelativeDocumentMoniker": "ERP-MVC\\Models\\DTOs\\InventoryAdjustment\\CreateAdjustmentDto.cs",
@@ -230,7 +321,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "AdjustmentLogDto.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Models\\DTOs\\InventoryAdjustment\\AdjustmentLogDto.cs",
               "RelativeDocumentMoniker": "ERP-MVC\\Models\\DTOs\\InventoryAdjustment\\AdjustmentLogDto.cs",
@@ -242,7 +333,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 16,
               "Title": "InventoryAdjustmentService.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Services\\InventoryAdjustment\\InventoryAdjustmentService.cs",
               "RelativeDocumentMoniker": "ERP-MVC\\Services\\InventoryAdjustment\\InventoryAdjustmentService.cs",
@@ -254,7 +345,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 15,
               "Title": "InventoryAdjustmentController.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Controllers\\InventoryAdjustment\\InventoryAdjustmentController.cs",
               "RelativeDocumentMoniker": "ERP-MVC\\Controllers\\InventoryAdjustment\\InventoryAdjustmentController.cs",
@@ -266,7 +357,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 20,
               "Title": "Logs.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\Warehouse\\Logs.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\Warehouse\\Logs.cshtml",
@@ -278,7 +369,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 22,
               "Title": "ProductPackage.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-API\\ERP-API.DataAccess\\Entities\\Inventory\\ProductPackage.cs",
               "RelativeDocumentMoniker": "ERP-API\\ERP-API.DataAccess\\Entities\\Inventory\\ProductPackage.cs",
@@ -290,7 +381,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 21,
               "Title": "WarehouseController.cs",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Controllers\\Warehouse\\WarehouseController.cs",
               "RelativeDocumentMoniker": "ERP-MVC\\Controllers\\Warehouse\\WarehouseController.cs",
@@ -302,7 +393,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 23,
               "Title": "Transfer.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\Warehouse\\Transfer.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\Warehouse\\Transfer.cshtml",
@@ -314,7 +405,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 24,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\Courses\\DEPI\\.NET_Full_stack\\Repo\\Project\\ERP-MVC\\Views\\Warehouse\\Details.cshtml",
               "RelativeDocumentMoniker": "ERP-MVC\\Views\\Warehouse\\Details.cshtml",

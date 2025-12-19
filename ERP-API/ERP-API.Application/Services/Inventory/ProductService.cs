@@ -20,9 +20,7 @@ namespace ERP_API.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        // ==========================================================
-        // 1. ADD PRODUCT (Async)
-        // ==========================================================
+       
         public async Task<ProductResponseDto> AddProductAsync(ProductInsertDto dto)
         {
             // 1. Create Product Entity
@@ -104,9 +102,7 @@ namespace ERP_API.Application.Services
             };
         }
 
-        // ==========================================================
-        // 2. ADD VARIATION (Async)
-        // ==========================================================
+       
         public async Task<VariationResponseDto> AddVariationAsync(int productId, VariationInsertDto dto)
         {
             string smartSku = await GenerateSmartSKUAsync(productId);
@@ -161,9 +157,7 @@ namespace ERP_API.Application.Services
             };
         }
 
-        // ==========================================================
-        // 3. ADD PACKAGE (Async)
-        // ==========================================================
+        
         public async Task<PackageResponseDto> AddPackageAsync(int variationId, PackageLinkInsertDto dto)
         {
             var package = new ProductPackage
@@ -194,9 +188,7 @@ namespace ERP_API.Application.Services
             };
         }
 
-        // ==========================================================
-        // 4. GET ALL PRODUCTS (Async)
-        // ==========================================================
+        
         public async Task<IEnumerable<ProductSummaryDto>> GetAllProductsAsync()
         {
             return await _unitOfWork.Products.GetAllQueryable()
@@ -206,12 +198,10 @@ namespace ERP_API.Application.Services
                     Name = p.Name,
                     VariationCount = p.Variations.Count()
                 })
-                .ToListAsync(); // ✅ Async Execution
+                .ToListAsync(); 
         }
 
-        // ==========================================================
-        // 5. GET PRODUCT BY ID (Async)
-        // ==========================================================
+        
         public async Task<ProductResponseDto?> GetProductByIdAsync(int id)
         {
             var query = _unitOfWork.Products.GetAllQueryable()
